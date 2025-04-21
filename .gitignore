@@ -1,2 +1,3 @@
 *.pdf
 .x/napkin/
+.x/dist/

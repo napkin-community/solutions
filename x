@@ -52,6 +52,9 @@ const commands = {
     console.log(
       `                                the profile to register it to challengers`,
     );
+    console.log(
+      `  website                       Make website displaying solutions`,
+    );
   },
   async build(hash = 'main', { force = false } = {}) {
     const targetDir = `.x/napkin/snapshots/${hash}`;
@@ -195,7 +198,7 @@ const commands = {
     );
     await fs.writeFile(
       `template/napkin-challengers.typ`,
-      `
+      dedent(`
       | #let challengers = (
       ${wholeChallengers
         .toSorted((a, b) => a.localeCompare(b))
@@ -212,13 +215,102 @@ const commands = {
         )
         .join('\n')}
       | )
-      `
-        .trim()
-        .split('\n')
-        .map((x) => x.trimStart().replace(/^\| /, ''))
-        .join('\n'),
+      `),
       { encoding: 'utf-8' },
     );
+  },
+  async website() {
+    console.log(
+      `    \x1B[34m[i]\x1B[0m    Clean build the website to \x1B[4m.x/dist/\x1B[0m...`,
+    );
+    const dist = '.x/dist/';
+    await fs.rm(dist, { recursive: true, force: true });
+    await fs.mkdir(dist, { recursive: true });
+
+    const chapters = await Array.fromAsync(
+      fs.glob('chapter-*', { cwd: 'src/problems' }),
+    );
+    for (const chapter of chapters) {
+      console.log(
+        `    \x1B[34m[i]\x1B[0m    Building \x1B[4msrc/problems/${chapter}\x1B[0m...`,
+      );
+      const problems = (
+        await Array.fromAsync(
+          fs.glob('*.typ', { cwd: `src/problems/${chapter}` }),
+        )
+      ).map((filename) => path.parse(filename).name);
+      await fs.writeFile(
+        path.join(dist, `${chapter}.html`),
+        dedent(`
+            | <!DOCTYPE html>
+            | <head>
+            | <style>
+            | ol { list-style: none; }
+            | </style>
+            | <body>
+            | <h1>@napkin-community/solutions &gt; ${chapter}</h1>
+            | <a href="/">Back to Chapter Selection</a>
+            | <h2>Table of Contents</h2>
+            | <ol>
+            ${problems
+              .map((problem) =>
+                dedent(`
+                  | <li>
+                  | <a href="#${problem}">${problem}</a>
+                  | </li>
+                `),
+              )
+              .join('\n')}
+            | </ol>
+            ${problems
+              .map((problem) =>
+                dedent(`
+                  | <h2 id="${problem}">${problem}</h2>
+                  | ${$(
+                    `typst compile --root . -f svg src/problems/${chapter}/${problem}.typ -`,
+                    { requireValue: true },
+                  )}
+                `),
+              )
+              .join('\n')}
+            | <script>
+            |   for (const doc of document.querySelectorAll('svg.typst-doc')) {
+            |     doc.removeAttribute('width');
+            |     doc.removeAttribute('height');
+            |   }
+            | </script>
+          `),
+        { encoding: 'utf-8' },
+      );
+    }
+
+    console.log(`    \x1B[34m[i]\x1B[0m    Making index...`);
+
+    await fs.writeFile(
+      path.join(dist, 'index.html'),
+      dedent(`
+        | <!DOCTYPE html>
+        | <head>
+        | <style>
+        | ol { list-style: none; }
+        | </style>
+        | <body>
+        | <h1>@napkin-community/solutions</h1>
+        | <ol>
+        ${chapters
+          .map((chapter) =>
+            dedent(`
+              | <li>
+              | <a href="/${chapter}">${chapter}</a>
+              | </li>
+            `),
+          )
+          .join('\n')}
+        | </ol>
+      `),
+      { encoding: 'utf-8' },
+    );
+    console.log(`    \x1B[34m[i]\x1B[0m    Done!`);
   },
 };
 
@@ -248,6 +340,14 @@ switch (positionals[0]) {
   case 'register':
     await commands.register(positionals[1]);
     break;
+  case 'website':
+    await commands.website();
+    break;
+  default:
+    console.log(
+      `    \x1B[31m[!]\x1B[0m    Unknown command: ./x ${positionals[0]}`,
+    );
+    process.exit(1);
 }
 
 /**
@@ -270,4 +370,17 @@ function $(command, { cwd, silent = false, requireValue = false } = {}) {
     stdio: requireValue ? 'pipe' : silent ? 'ignore' : 'inherit',
     encoding: 'utf-8',
   });
+}
+
+/**
+ *
+ * @param string {string}
+ * @returns {string}
+ */
+function dedent(string) {
+  return string
+    .trim()
+    .split('\n')
+    .map((x) => x.trimStart().replace(/^\| /, ''))
+    .join('\n');
 }
