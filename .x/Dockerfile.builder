@@ -1,4 +1,3 @@
-# Tectonic을 검토해보고 싶었으나 그렇게까지 열심히 할 필요는 없다고 판단. TeX Live로 진행한다.
 FROM ubuntu:24.04
 
 WORKDIR /napkin
