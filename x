@@ -246,6 +246,7 @@ const commands = {
             | <head>
             | <style>
             | ol { list-style: none; }
+            | svg { max-width: 80em; }
             | </style>
             | <body>
             | <h1>@napkin-community/solutions &gt; ${chapter}</h1>
