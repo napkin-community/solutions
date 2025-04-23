@@ -260,7 +260,7 @@
 /// The solution box
 ///
 /// #example(```
-/// #solution(useres.ranolp)[
+/// #solution(users.ranolp)[
 ///   It's trivial
 /// ]
 /// ```, dir: ttb, scale-preview: 100%)
