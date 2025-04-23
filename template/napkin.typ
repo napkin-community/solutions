@@ -260,14 +260,14 @@
 /// The solution box
 ///
 /// #example(```
-/// #solution(challengers.ranolp)[
+/// #solution(useres.ranolp)[
 ///   It's trivial
 /// ]
 /// ```, dir: ttb, scale-preview: 100%)
 ///
 /// -> content
 #let solution(
-  /// The challenger who try to propose a solution
+  /// The user who try to propose a solution
   /// -> dictionary
   by,
   /// Content of the box.

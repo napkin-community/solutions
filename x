@@ -101,7 +101,7 @@ const commands = {
       `    \x1B[34m[i]\x1B[0m    Successfully wrote metadata for \x1B[4m${response.login}\x1B[0m`,
     );
     console.log(
-      `    \x1B[34m[i]\x1B[0m    Update \x1B[4mtemplate/napkin-challengers.typ\x1B[0m...`,
+      `    \x1B[34m[i]\x1B[0m    Update \x1B[4mtemplate/napkin-users.typ\x1B[0m...`,
     );
     const wholeUsers = (
       await Array.fromAsync(fs.glob('*.json', { cwd: targetDir }))
@@ -112,11 +112,11 @@ const commands = {
       | #let users = (
       ${wholeUsers
         .toSorted((a, b) => a.localeCompare(b))
-        .map((challenger) =>
+        .map((user) =>
           [
-            `|   ${JSON.stringify(challenger)}: {`,
+            `|   ${JSON.stringify(user)}: {`,
             `|     let metadata = json(${JSON.stringify(
-              `../users/${challenger}.json`,
+              `../users/${user}.json`,
             )})`,
             `|     let avatar = read(metadata.avatar.path, encoding: none)`,
             `|     (..metadata, avatar: (source: avatar, format: metadata.avatar.format))`,

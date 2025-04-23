@@ -6,8 +6,8 @@ This repository serves solutions for the problems from the book, [An Infinitely 
 
 This CLI tool provide various features to support you such as...
 
-- Downloading the most recent draft of Napkin
-- Register yourself as a *Challenger* who solves problems in Typst
+- Register yourself as a problems solver in Typst
+- Generate website
 
 ## Contribution
 
