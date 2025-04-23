@@ -2,7 +2,7 @@
   "login": "RanolP",
   "name": "RanolP",
   "avatar": {
-    "path": "assets/challengers/ranolp/avatar.png",
+    "path": "../users/ranolp.png",
     "format": "png"
   },
   "social": {

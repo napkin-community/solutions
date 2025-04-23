@@ -1,6 +1,6 @@
-#let challengers = (
+#let users = (
   "ranolp": {
-    let metadata = json("./assets/challengers/ranolp/metadata.json")
+    let metadata = json("../users/ranolp.json")
     let avatar = read(metadata.avatar.path, encoding: none)
     (..metadata, avatar: (source: avatar, format: metadata.avatar.format))
   },

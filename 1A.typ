@@ -1,8 +1,7 @@
 
 
-#import "../../../template/napkin.typ": *
-#import "../../../template/napkin-solve-utilities.typ": *
-#import "../../../template/napkin-challengers.typ": *
+#import "template/napkin.typ": *
+#import "template/napkin-users.typ": *
 
 #plain_box(
   title: "Problem 1A",
@@ -11,10 +10,10 @@
 ]
 
 #align(center)[
-  #image("./love-proper-isomorphic-subgroup.jpg", width: 40%)
+  #image("assets/love-proper-isomorphic-subgroup.jpg", width: 40%)
 ]
 
-#solution(challengers.ranolp)[
+#solution(users.ranolp)[
   Let's say "my love for you" as a group called $G$. \
   The picture claims that there exists a proper subgroup $H tilde.equiv G$. \
   If $G$ is finite, any proper subgroup cannot be isomorphic to $G$ itself. \
@@ -25,7 +24,7 @@
 
 #import "@preview/citegeist:0.1.0": load-bibliography
 
-#let bib = load-bibliography(read("../../../images.bib"))
+#let bib = load-bibliography(read("images.bib"))
 
 == Image Attributions
 
