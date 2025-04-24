@@ -351,6 +351,6 @@ function dedent(string) {
   return string
     .trim()
     .split('\n')
-    .map((x) => x.trimStart().replace(/^\| /, '') + '\n')
+    .map((x) => x.trimStart().replace(/^\|(?: |$)/, '') + '\n')
     .join('');
 }
