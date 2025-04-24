@@ -23,5 +23,3 @@ And followings are good to have/learn
 - [Espanso](https://espanso.org/) - Write mathematics symbols outside Typst.
   - [Typsi](https://github.com/RanolP/typsi) - If you like typst-y symbol names, use this espanso package.
 - [Curl](https://curl.se/) - Download the book using `./x` utility.
-- [Podman](https://podman.io/) or [Docker](https://www.docker.com/) - To build specific snapshot of the book in a one-command.
-  - Docker support is untested yet;
