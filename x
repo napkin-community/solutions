@@ -29,19 +29,15 @@ const commands = {
     console.log(`./x 0.1.0-SNAPSHOT.1`);
   },
   async help() {
-    console.log(`./x - Napkin Utilities`);
-    console.log(`Usage: ./x [--version] [--help]`);
-    console.log(`           <command> [<args>]`);
-    console.log(``);
-    console.log(
-      `  register <github-handle>      Fetch GitHub profile from handle and download`,
-    );
-    console.log(
-      `                                the profile to register it to users`,
-    );
-    console.log(
-      `  website                       Make website displaying solutions`,
-    );
+    console.log(dedent(`
+      | ./x - Napkin Utilities
+      | Usage: ./x [-v | --version] [-h | --help]
+      |            <command> [<args>]
+      |
+      |   register <github-handle>      Fetch GitHub profile from handle and download
+      |                                 the profile to register it to users
+      |   website                       Make website displaying solutions
+    `));
   },
 
   async register(handle) {
