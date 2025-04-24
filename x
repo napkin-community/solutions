@@ -179,7 +179,7 @@ async function build({ basepath = '' }) {
     new Set(compiledProblems.map(({ chapter }) => chapter)),
   );
   for (const chapter of chapters) {
-    log(`Building \x1B[4msrc/problems/${chapter}.html\x1B[0m...`);
+    log(`Building \x1B[4m${chapter}.html\x1B[0m...`);
     const problems = compiledProblems.filter(
       (problem) => problem.chapter === chapter,
     );
@@ -228,8 +228,7 @@ async function build({ basepath = '' }) {
     );
   }
 
-  log('Making index...');
-
+  log('Building \x1B[4mindex.html\x1B[0m');
   await fs.writeFile(
     path.join(dist, 'index.html'),
     dedent(`
