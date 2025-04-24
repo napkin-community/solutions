@@ -10,6 +10,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -25,22 +28,6 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
-
-  # Only in main branch
-  deploy:
-    if: github.ref == 'refs/heads/main'
-    needs: build
-
-    # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-    # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-    concurrency:
-      group: pages
-      cancel-in-progress: false
-
-    runs-on: ubuntu-24.04
-    steps:
-      - id: deployment
+      - if: github.ref == 'refs/heads/main'
+        id: deployment
         uses: actions/deploy-pages@v4
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
