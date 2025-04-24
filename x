@@ -2,6 +2,9 @@
 import process from 'node:process';
 import { parseArgs } from 'node:util';
 import { exec } from 'node:child_process';
+import { Readable } from 'node:stream';
+import { finished } from 'node:stream/promises';
+import { createWriteStream } from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
@@ -66,30 +69,27 @@ async function register(handle) {
     showHelpThenExit(1);
   }
   log(`Fetch \x1B[4m${handle}\x1B[0m from GitHub...`);
-  const response = JSON.parse(
-    (
-      await $(`curl https://api.github.com/users/${handle}`, {
-        requireValue: true,
-      })
-    ).stdout,
-  );
+  const resp = await fetch(`https://api.github.com/users/${handle}`);
+  const payload = await resp.json();
 
   const targetDir = `users/`;
   await fs.mkdir(targetDir, { recursive: true });
-  const avatarMime = (await fetch(response.avatar_url)).headers.get(
+  const avatarMime = (await fetch(payload.avatar_url)).headers.get(
     'Content-Type',
   );
   const avatarFormat = avatarMime.replace(/^image\//, '');
   const avatarFilename = `${handle.toLowerCase()}.${avatarFormat}`;
-  await $(`curl ${response.avatar_url} --output ${avatarFilename}`, {
-    cwd: targetDir,
-  });
+
+  const avatar = await fetch(payload.avatar_url)
+  const file = createWriteStream(path.join(targetDir, avatarFilename))
+  await finished(Readable.fromWeb(avatar.body).pipe(file))
+
   await fs.writeFile(
     path.join(targetDir, `${handle.toLowerCase()}.json`),
     JSON.stringify(
       {
-        login: response.login,
-        name: response.name,
+        login: payload.login,
+        name: payload.name,
         avatar: {
           path: path.relative(
             `template`,
@@ -98,9 +98,9 @@ async function register(handle) {
           format: avatarFormat,
         },
         social: {
-          github: `https://github.com/${response.login}`,
-          twitter: response.twitter_username
-            ? `https://twitter.com/${response.twitter_username}`
+          github: `https://github.com/${payload.login}`,
+          twitter: payload.twitter_username
+            ? `https://twitter.com/${payload.twitter_username}`
             : null,
         },
       },
@@ -109,7 +109,7 @@ async function register(handle) {
     ) + '\n',
     { encoding: 'utf-8' },
   );
-  log(`Successfully wrote metadata for \x1B[4m${response.login}\x1B[0m`);
+  log(`Successfully wrote metadata for \x1B[4m${payload.login}\x1B[0m`);
   log(`Update \x1B[4mtemplate/napkin-users.typ\x1B[0m...`);
 
   const wholeUsers = (await fs.readdir(targetDir))
