@@ -1,4 +1,4 @@
-#!/usr/bin/env -S node --no-warnings
+#!/usr/bin/env node
 import process from 'node:process';
 import { parseArgs } from 'node:util';
 import { exec } from 'node:child_process';
@@ -99,21 +99,19 @@ async function register(handle) {
   console.log(
     `    \x1B[34m[i]\x1B[0m    Update \x1B[4mtemplate/napkin-users.typ\x1B[0m...`,
   );
-  const wholeUsers = (
-    await Array.fromAsync(fs.glob('*.json', { cwd: targetDir }))
-  ).map((x) => x.replace(/\.json$/, ''));
+
+  const wholeUsers = (await fs.readdir(targetDir))
+    .flatMap(x => x.match(/^([a-zA-Z\d](?:[a-zA-Z\d]|-(?=[a-zA-Z\d])){0,38})\.json$/)?.[1] ?? [])
+    .toSorted((a, b) => a.localeCompare(b));
   await fs.writeFile(
     `template/napkin-users.typ`,
     dedent(`
     | #let users = (
     ${wholeUsers
-      .toSorted((a, b) => a.localeCompare(b))
       .map((user) =>
         [
-          `|   ${JSON.stringify(user)}: {`,
-          `|     let metadata = json(${JSON.stringify(
-            `../users/${user}.json`,
-          )})`,
+          `|   "${user}": {`,
+          `|     let metadata = json("../users/${user}.json")`,
           `|     let avatar = read(metadata.avatar.path, encoding: none)`,
           `|     (..metadata, avatar: (source: avatar, format: metadata.avatar.format))`,
           `|   },`,
@@ -134,11 +132,11 @@ async function website({ basepath = '' }) {
   await fs.rm(dist, { recursive: true, force: true });
   await fs.mkdir(dist, { recursive: true });
 
-  const problems = await Array.fromAsync(fs.glob('*.typ'));
+  const problems = await fs.readdir('.');
   const compiledProblems = (
     await Promise.all(
       problems.map(async (filename) => {
-        const group = /([0-9]+)([A-Z]+)\.typ/.exec(filename);
+        const group = /^([0-9]+)([A-Z]+)\.typ$/.exec(filename);
         if (!group) return null;
         const [_, chapter, problemCode] = group;
         console.log(
