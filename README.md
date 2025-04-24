@@ -17,3 +17,14 @@ You'd better have the following tools for a better contribution experience
 - [Visual Studio Code](https://code.visualstudio.com/) - General purpose editor.
 - [Espanso](https://espanso.org/) - Write mathematics symbols outside Typst.
 - [Typsi](https://github.com/RanolP/typsi) - If you like typst-y symbol names, use this espanso package.
+
+&nbsp;
+
+--------
+
+*napkin-community/solutions* is primarily distributed under the terms of the
+[GNU Affero General Public License v3.0] or any later version. See [COPYRIGHT]
+for details.
+
+[GNU Affero General Public License v3.0]: LICENSE
+[COPYRIGHT]: COPYRIGHT
