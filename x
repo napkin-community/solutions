@@ -42,8 +42,8 @@ switch (positionals[0]) {
   case 'register':
     await register(positionals[1]);
     break;
-  case 'website':
-    await website(values);
+  case 'build':
+    await build(values);
 }
 
 function showHelpThenExit(code = 0) {
@@ -54,7 +54,7 @@ Usage: ./x [-v | --version] [-h | --help]
 
   register <github-handle>      Fetch GitHub profile from handle and download
                                 the profile to register it to users
-  website                       Make website displaying solutions
+  build                         Build a website displaying solutions
 `);
   process.exit(code);
 }
@@ -136,7 +136,7 @@ async function register(handle) {
   );
 }
 
-async function website({ basepath = '' }) {
+async function build({ basepath = '' }) {
   const dist = 'dist/';
   log(`Clean build the website to \x1B[4m${dist}\x1B[0m...`);
   await fs.rm(dist, { recursive: true, force: true });
