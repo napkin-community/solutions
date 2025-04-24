@@ -24,6 +24,31 @@ const { values, positionals } = parseArgs({
   allowPositionals: true,
 });
 
+if (values.help) {
+  help();
+  process.exit(0);
+}
+if (values.version) {
+  version();
+  process.exit(0);
+}
+
+switch (positionals[0]) {
+  case undefined:
+  case 'help':
+    await help();
+    break;
+  case 'register':
+    await register(positionals[1]);
+    break;
+  case 'website':
+    await website(values);
+    break;
+  default:
+    log(`Unknown command: ./x ${positionals[0]}`, '!');
+    process.exit(1);
+}
+
 async function version() {
   console.log(`./x 0.1.0-SNAPSHOT.1`);
 }
@@ -263,31 +288,6 @@ async function website({ basepath = '' }) {
     { encoding: 'utf-8' },
   );
   log('Done!');
-}
-
-if (values.help) {
-  help();
-  process.exit(0);
-}
-if (values.version) {
-  version();
-  process.exit(0);
-}
-
-switch (positionals[0]) {
-  case undefined:
-  case 'help':
-    await help();
-    break;
-  case 'register':
-    await register(positionals[1]);
-    break;
-  case 'website':
-    await website(values);
-    break;
-  default:
-    log(`Unknown command: ./x ${positionals[0]}`, '!');
-    process.exit(1);
 }
 
 /**
