@@ -29,27 +29,25 @@ async function version() {
 }
 
 async function help() {
-  console.log(dedent(`
-    | ./x - Napkin Utilities
-    | Usage: ./x [-v | --version] [-h | --help]
-    |            <command> [<args>]
-    |
-    |   register <github-handle>      Fetch GitHub profile from handle and download
-    |                                 the profile to register it to users
-    |   website                       Make website displaying solutions
-  `));
+  console.log(`\
+./x - Napkin Utilities
+Usage: ./x [-v | --version] [-h | --help]
+           <command> [<args>]
+
+  register <github-handle>      Fetch GitHub profile from handle and download
+                                the profile to register it to users
+  website                       Make website displaying solutions
+`);
 }
 
 async function register(handle) {
   if (handle == null) {
-    console.log(
-      `    \x1B[31m[!]\x1B[0m    Handle is not supplied to the register command`,
-    );
+    log(`Handle is not supplied to the register command`, '!');
+    console.log();
+    help()
     process.exit(1);
   }
-  console.log(
-    `    \x1B[34m[i]\x1B[0m    Fetch \x1B[4m${handle}\x1B[0m from GitHub...`,
-  );
+  log(`Fetch \x1B[4m${handle}\x1B[0m from GitHub...`);
   const response = JSON.parse(
     (
       await $(`curl https://api.github.com/users/${handle}`, {
@@ -93,12 +91,8 @@ async function register(handle) {
     ) + '\n',
     { encoding: 'utf-8' },
   );
-  console.log(
-    `    \x1B[34m[i]\x1B[0m    Successfully wrote metadata for \x1B[4m${response.login}\x1B[0m`,
-  );
-  console.log(
-    `    \x1B[34m[i]\x1B[0m    Update \x1B[4mtemplate/napkin-users.typ\x1B[0m...`,
-  );
+  log(`Successfully wrote metadata for \x1B[4m${response.login}\x1B[0m`);
+  log(`Update \x1B[4mtemplate/napkin-users.typ\x1B[0m...`);
 
   const wholeUsers = (await fs.readdir(targetDir))
     .flatMap(x => x.match(/^([a-zA-Z\d](?:[a-zA-Z\d]|-(?=[a-zA-Z\d])){0,38})\.json$/)?.[1] ?? [])
@@ -126,9 +120,7 @@ async function register(handle) {
 
 async function website({ basepath = '' }) {
   const dist = 'dist/';
-  console.log(
-    `    \x1B[34m[i]\x1B[0m    Clean build the website to \x1B[4m${dist}\x1B[0m...`,
-  );
+  log(`Clean build the website to \x1B[4m${dist}\x1B[0m...`);
   await fs.rm(dist, { recursive: true, force: true });
   await fs.mkdir(dist, { recursive: true });
 
@@ -139,9 +131,7 @@ async function website({ basepath = '' }) {
         const group = /^([0-9]+)([A-Z]+)\.typ$/.exec(filename);
         if (!group) return null;
         const [_, chapter, problemCode] = group;
-        console.log(
-          `    \x1B[33m[$]\x1B[0m    typst compile --root . -f svg ${filename} -`,
-        );
+        log(`typst compile --root . -f svg ${filename} -`, '$');
         return {
           chapter,
           fullProblemCode: `${chapter}${problemCode}`,
@@ -171,9 +161,7 @@ async function website({ basepath = '' }) {
     new Set(compiledProblems.map(({ chapter }) => chapter)),
   );
   for (const chapter of chapters) {
-    console.log(
-      `    \x1B[34m[i]\x1B[0m    Building \x1B[4msrc/problems/${chapter}.html\x1B[0m...`,
-    );
+    log(`Building \x1B[4msrc/problems/${chapter}.html\x1B[0m...`);
     const problems = compiledProblems.filter(
       (problem) => problem.chapter === chapter,
     );
@@ -222,7 +210,7 @@ async function website({ basepath = '' }) {
     );
   }
 
-  console.log(`    \x1B[34m[i]\x1B[0m    Making index...`);
+  log('Making index...');
 
   await fs.writeFile(
     path.join(dist, 'index.html'),
@@ -274,7 +262,7 @@ async function website({ basepath = '' }) {
     `),
     { encoding: 'utf-8' },
   );
-  console.log(`    \x1B[34m[i]\x1B[0m    Done!`);
+  log('Done!');
 }
 
 if (values.help) {
@@ -298,9 +286,7 @@ switch (positionals[0]) {
     await website(values);
     break;
   default:
-    console.log(
-      `    \x1B[31m[!]\x1B[0m    Unknown command: ./x ${positionals[0]}`,
-    );
+    log(`Unknown command: ./x ${positionals[0]}`, '!');
     process.exit(1);
 }
 
@@ -316,9 +302,7 @@ switch (positionals[0]) {
  * @returns {Promise<{ stdout: string, stderr: string }>}
  */
 function $(command, { cwd, stdin, silent = false, requireValue = false } = {}) {
-  if (!silent) {
-    console.log(`    \x1B[33m[$]\x1B[0m    ${command}`);
-  }
+  if (!silent) log(command, '$');
   return new Promise((resolve) => {
     const process = exec(
       command,
@@ -334,6 +318,17 @@ function $(command, { cwd, stdin, silent = false, requireValue = false } = {}) {
       process.stdin.end();
     }
   });
+}
+
+/**
+ *
+ * @param string {string}
+ * @param level {string}
+ * @returns {undefined}
+ */
+function log(string, level = 'i') {
+  const c = {'$': '33', '!': '31' }[level] ?? '34';
+  console.log(`    \x1B[${c}m[${level}]\x1B[0m    ${string}`);
 }
 
 /**
