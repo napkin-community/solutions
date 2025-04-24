@@ -94,7 +94,7 @@ const commands = {
         },
         null,
         2,
-      ),
+      ) + '\n',
       { encoding: 'utf-8' },
     );
     console.log(
@@ -351,6 +351,6 @@ function dedent(string) {
   return string
     .trim()
     .split('\n')
-    .map((x) => x.trimStart().replace(/^\| /, ''))
-    .join('\n');
+    .map((x) => x.trimStart().replace(/^\| /, '') + '\n')
+    .join('');
 }
