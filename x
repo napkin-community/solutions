@@ -25,35 +25,28 @@ const { values, positionals } = parseArgs({
 });
 
 if (values.help) {
-  help();
-  process.exit(0);
+  showHelpThenExit();
 }
 if (values.version) {
-  version();
+  console.log('./x 0.1.0-SNAPSHOT.1');
   process.exit(0);
 }
 
 switch (positionals[0]) {
+  default:
+    log(`Unknown command: ./x ${positionals[0]}`, '!');
+    console.log();
   case undefined:
   case 'help':
-    await help();
-    break;
+    showHelpThenExit();
   case 'register':
     await register(positionals[1]);
     break;
   case 'website':
     await website(values);
-    break;
-  default:
-    log(`Unknown command: ./x ${positionals[0]}`, '!');
-    process.exit(1);
 }
 
-async function version() {
-  console.log(`./x 0.1.0-SNAPSHOT.1`);
-}
-
-async function help() {
+function showHelpThenExit(code = 0) {
   console.log(`\
 ./x - Napkin Utilities
 Usage: ./x [-v | --version] [-h | --help]
@@ -63,14 +56,14 @@ Usage: ./x [-v | --version] [-h | --help]
                                 the profile to register it to users
   website                       Make website displaying solutions
 `);
+  process.exit(code);
 }
 
 async function register(handle) {
   if (handle == null) {
     log(`Handle is not supplied to the register command`, '!');
     console.log();
-    help()
-    process.exit(1);
+    showHelpThenExit(1);
   }
   log(`Fetch \x1B[4m${handle}\x1B[0m from GitHub...`);
   const response = JSON.parse(
