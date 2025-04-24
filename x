@@ -13,7 +13,6 @@ import path from 'node:path';
  *   values: {
  *      version: boolean;
  *      help: boolean;
- *      basepath: string;
  *   };
  *   positionals: string[];
  * }}
@@ -22,7 +21,6 @@ const { values, positionals } = parseArgs({
   options: {
     version: { type: 'boolean', short: 'v' },
     help: { type: 'boolean', short: 'h' },
-    basepath: { type: 'string' },
   },
   allowPositionals: true,
 });
@@ -136,7 +134,7 @@ async function register(handle) {
   );
 }
 
-async function build({ basepath = '' }) {
+async function build() {
   const dist = 'dist/';
   log(`Clean build the website to \x1B[4m${dist}\x1B[0m...`);
   await fs.rm(dist, { recursive: true, force: true });
@@ -194,9 +192,7 @@ async function build({ basepath = '' }) {
           | </style>
           | <body>
           | <h1>@napkin-community/solutions &gt; Chapter ${chapter}</h1>
-          | <a href=${JSON.stringify(
-            path.posix.resolve('/', basepath),
-          )}>Back to Chapter Selection</a>
+          | <a href=".">Back to Chapter Selection</a>
           | <h2>Table of Contents</h2>
           | <ol>
           ${problems
@@ -268,9 +264,7 @@ async function build({ basepath = '' }) {
         .map((chapter) =>
           dedent(`
             | <li>
-            | <a href=${JSON.stringify(
-              path.posix.resolve('/', basepath, `${chapter}.html`),
-            )}>Ch. ${chapter}</a>
+            | <a href="${chapter}.html">Ch. ${chapter}</a>
             | </li>
           `),
         )
