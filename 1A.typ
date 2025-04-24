@@ -1,5 +1,3 @@
-
-
 #import "template/napkin.typ": *
 #import "template/napkin-users.typ": *
 
@@ -43,4 +41,3 @@
     [#text(font: "DejaVu Sans Mono", fill: color.rgb("0000FF"))[#link(fields.url)[#(fields.url)]].]
   }
 ]
-
