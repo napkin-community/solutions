@@ -2,7 +2,7 @@
   "login": "finalchild",
   "name": "finalchild",
   "avatar": {
-    "path": "..\\users\\finalchild.png",
+    "path": "../users/finalchild.png",
     "format": "png"
   },
   "social": {
