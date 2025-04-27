@@ -15,7 +15,7 @@
 /// ```
 ///
 /// -> content
-#let qed = [#h(1fr) #sym.square]
+#let qed = [#h(1fr) $square$]
 
 /// Dagger.
 ///
@@ -153,6 +153,69 @@
   ],
 )
 
+/// A note with green left strip. Used for remarks.
+///
+/// Requires Latin Modern Sans font.
+///
+/// #example(```
+/// #green_note(subtitle: [For Euclidean geometers])[Remark 64.6.5][
+///   You may recognize that while $RR PP^2$ is  the setting for projective geometry,
+///   inversion about a circle is done in $CC PP^1$ instead. When one does an inversion sending
+///   generalized circles to generalized circles, there is only one point at infinity:
+///   this is why we work in $CC PP^n$.
+/// ]
+/// ```, dir: ttb, scale-preview: 100%)
+///
+/// -> content
+#let green_note(
+  /// Title of the note.
+  /// -> content
+  title,
+  /// Content of the note.
+  /// -> content
+  content,
+  /// Subtitle of the note.
+  /// -> content | none
+  subtitle: none,
+) = block(
+  width: 100%,
+  stroke: (
+    left: 3pt + rgb("008000"),
+  ),
+  fill: rgb("f2f9f5"),
+  inset: (
+    left: 3pt + 1em,
+    right: 1em,
+    y: 1em,
+  ),
+  latexize[
+    #text(fill: rgb("008000"), font: "Latin Modern Sans")[#titlize(title, subtitle) #sym.dash.em]
+    #content
+  ],
+)
+
+/// Green box. Used for results of remarks.
+///
+/// #example(```
+/// #green_box[
+///   $CC PP^n$ consists of one cell in each _even_ dimension.
+/// ]
+/// ```, dir: ttb, scale-preview: 100%)
+///
+/// -> content
+#let green_box(
+  /// Content of the box.
+  /// -> content
+  content,
+) = block(
+  width: 100%,
+  stroke: 1pt + rgb("00b200"),
+  inset: (x: 1em, y: 0.65em),
+  latexize[
+    #text(fill: rgb("008000"), [*#content*])
+  ],
+)
+
 /// Blue box. Used for theorems, lemmas, corollaries, and propositions.
 ///
 /// Requires Latin Modern Sans font.
@@ -223,7 +286,7 @@
 ) = block(
   width: 100%,
   stroke: 1pt + black,
-  inset: 1em,
+  inset: (x: 1em, y: 0.65em),
   latexize(if title == none { content } else {
     [#titlize_dot(title, subtitle) #content]
   }),
