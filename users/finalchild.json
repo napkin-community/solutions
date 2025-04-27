@@ -1,0 +1,12 @@
+{
+  "login": "finalchild",
+  "name": "finalchild",
+  "avatar": {
+    "path": "../users/finalchild.png",
+    "format": "png"
+  },
+  "social": {
+    "github": "https://github.com/finalchild",
+    "twitter": null
+  }
+}

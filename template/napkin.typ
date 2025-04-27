@@ -15,7 +15,7 @@
 /// ```
 ///
 /// -> content
-#let qed = align(right)[#sym.star mic drop #sym.star]
+#let qed = [#h(1fr) #sym.square]
 
 /// Dagger.
 ///
@@ -103,7 +103,7 @@
   /// Subtitle of the box.
   /// -> content | none
   subtitle: none,
-) = box(
+) = block(
   width: 100%,
   stroke: 1pt + rgb("9e3c0e"),
   fill: rgb("fff9f8"),
@@ -136,7 +136,7 @@
   /// Subtitle of the note.
   /// -> content | none
   subtitle: none,
-) = box(
+) = block(
   width: 100%,
   stroke: (
     left: 3pt + black,
@@ -175,7 +175,7 @@
   /// Subtitle of the box.
   /// -> content | none
   subtitle: none,
-) = box(
+) = block(
   width: 100%,
   stroke: 1pt + blue,
   fill: rgb("f3fbfb"),
@@ -220,7 +220,7 @@
   /// Subtitle of the box.
   /// -> content | none
   subtitle: none,
-) = box(
+) = block(
   width: 100%,
   stroke: 1pt + black,
   inset: 1em,
@@ -274,18 +274,16 @@
   /// -> content
   content,
   subtitle: none,
-) = box(
+) = block(
   width: 100%,
   fill: rgb("#fbf8ff"),
   inset: 1em,
   latexize[
-    #text(
-      fill: rgb("#450e9e"),
-    )[
+    #text(fill: rgb("#450e9e"))[
       #titlize([Solution], subtitle)
       #if subtitle != none {
         linebreak()
-      } else {}
+      } else { }
       _by_ #box(baseline: 20%, radius: 2pt, clip: true)[#image(by.avatar.source, format: by.avatar.format, height: 1.2em)] #if by.name != by.login {
         [#by.name (#by.login)]
       } else {

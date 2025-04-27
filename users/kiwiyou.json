@@ -1,0 +1,12 @@
+{
+  "login": "kiwiyou",
+  "name": "kiwiyou",
+  "avatar": {
+    "path": "../users/kiwiyou.jpeg",
+    "format": "jpg"
+  },
+  "social": {
+    "github": "https://github.com/kiwiyou",
+    "twitter": "https://twitter.com/giwiyou"
+  }
+}

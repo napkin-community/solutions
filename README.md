@@ -12,6 +12,10 @@ npx serve dist
 
 ### Contribution
 
+To match Napkin's style, some fonts are required:
+
+- [Latin Modern Sans](https://www.gust.org.pl/projects/e-foundry/latin-modern) - For `#blue_box`.
+
 You'd better have the following tools for a better contribution experience
 
 - [Visual Studio Code](https://code.visualstudio.com/) - General purpose editor.

@@ -20,4 +20,4 @@ Since $f$ is continuous, $f^("img")(x_(gamma_k)) = y_(gamma_k)$ is a convergent 
 
 Therefore, $f^("img")(X)$ is compact.
 
-#qed
+#kiwied
