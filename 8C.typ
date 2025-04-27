@@ -13,7 +13,7 @@
   users.ranolp,
 )[
   #enum[
-    For any open cover ${U_alpha}$, fix an non-empty open set $S in {U_alpha}$. \
+    For any open cover ${U_alpha}$, fix a non-empty open set $S in {U_alpha}$. \
     Due to cofinite topology, $S^C = X without S$ is finite. \
     Let's say $|S^C| = n$ and $S^C = { a_1, a_2, dots, a_(n-1), a_n }$. \
     For each $1 <= i <= n$, we pick $U_i in {U_alpha}$ containing $a_i$. \
