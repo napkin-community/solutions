@@ -18,4 +18,4 @@ $exists n_2 in NN. d(y_(j_n), y) < epsilon/2$
 
 $forall n > max(n_1, n_2). " " d(z_(j_n), (x,y)) < epsilon$
 
-Thus $z_(j_n) -> (x,y)$. $square$
+Thus $z_(j_n) -> (x,y)$. #sym.qed

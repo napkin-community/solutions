@@ -26,4 +26,4 @@ This is contradiction, so $C$ is connected.
 
 The connected components of $p in bb(Q)$ is not an open subset of $bb(Q)$.
 
-#qed
+#kiwied

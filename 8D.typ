@@ -12,4 +12,4 @@ For any finite subset of $C$, the union is some $C_n$, and every $C_n$ is not $X
 
 Since $X$ is compact and $C$ doesn't have a finite subset which covers $X$, $C$ is not an open cover.
 
-Thus $inter_(n in NN) K_n != empty$. $square$
+Thus $inter_(n in NN) K_n != empty$. #sym.qed

@@ -8,14 +8,14 @@
 /// -> content
 #let empty = text(font: "New Computer Modern")[#sym.nothing]
 
-/// End of the proof.
+/// End of the proof, kiwi style.
 ///
 /// ```example
-/// #qed
+/// #kiwied
 /// ```
 ///
 /// -> content
-#let qed = align(right)[#sym.star mic drop #sym.star]
+#let kiwied = align(right)[#sym.star mic drop #sym.star]
 
 /// Dagger.
 ///

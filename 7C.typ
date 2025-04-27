@@ -24,4 +24,4 @@ Since $Y = X without {p}$ is open, ${p}$ is closed.
   In a general topological space $X$, we say that $S subset.eq X$ is #glossary[closed] in $X$ if the complement $X without S$ is open in $X$.
 ]
 
-#qed
+#kiwied

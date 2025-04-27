@@ -16,4 +16,4 @@ For all subsequence ${x_(gamma_n)}$, $d(x_1, x_(gamma_n)) > n - 1$, so ${x_(gamm
 
 This is contradiction, so $X$ is not compact.
 
-#qed
+#kiwied
