@@ -89,9 +89,9 @@ async function register(handle) {
         login: payload.login,
         name: payload.name,
         avatar: {
-          path: path.relative(
+          path: path.posix.relative(
             `template`,
-            path.join(targetDir, avatarFilename),
+            path.posix.join(targetDir, avatarFilename),
           ),
           format: avatarFormat,
         },
