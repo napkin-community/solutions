@@ -1,29 +1,34 @@
 #import "template/napkin.typ": *
+#import "template/napkin-users.typ": *
 
 #plain_box(title: [Problem 7E])[
   Let $X$ be a topological space. The _connected component_ of a point $p in X$ is the union of all subspaces $S subset.eq X$ which are connected and contain $p$.
 
-  (a) Does the connected component of a point have to be itself connected?
-
-  (b) Does the connected component of a point have to be an open subset of $X$?
+  #enum(numbering: "(a)")[
+    Does the connected component of a point have to be itself connected?
+  ][
+    Does the connected component of a point have to be an open subset of $X$?
+  ]
 ]
 
-(a) Yes.
+#solution(users.finalchild)[
+  #set enum(numbering: "(a)")
 
-Let $C$ be the connected component of $p$.
+  1. *Yes.*
 
-Assume $C = (A sect C) union.sq (B sect C)$ where $A sect C$ and $B sect C$ are nonempty and $A$ and $B$ are open in $X$.
+    Let $C$ be the connected component of $p$.
 
-Without loss of generality, assume $p in B$.
+    Assume $C = (A inter C) union.sq (B inter C)$ where $A inter C$ and $B inter C$ are nonempty and $A$ and $B$ are open in $X$.
 
-Take some connected subspace $S subset.eq X$ such that $A sect S != nothing$.
+    Without loss of generality, assume $p in B$.
 
-Then $S = (A sect S) union.sq (B sect S)$, and both $A sect S$ and $B sect S$ are nonempty and open in $S$.
+    Take some connected subspace $S subset.eq X$ such that $A inter S != nothing$.
 
-This is contradiction, so $C$ is connected.
+    Then $S = (A inter S) union.sq (B inter S)$, and both $A inter S$ and $B inter S$ are nonempty and open in $S$.
 
-(b) No.
+    This is contradiction, so $C$ is connected. #qed
 
-The connected components of $p in bb(Q)$ is not an open subset of $bb(Q)$.
+  2. *No.*
 
-#kiwied
+    The connected components of $p in bb(Q)$ is not an open subset of $bb(Q)$. #qed
+]
