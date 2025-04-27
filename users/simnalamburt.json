@@ -1,0 +1,12 @@
+{
+  "login": "simnalamburt",
+  "name": "Jihyeon Kim (김지현)",
+  "avatar": {
+    "path": "../users/simnalamburt.png",
+    "format": "png"
+  },
+  "social": {
+    "github": "https://github.com/simnalamburt",
+    "twitter": "https://twitter.com/simnalamburt"
+  }
+}
