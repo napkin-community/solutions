@@ -94,7 +94,7 @@
 
   Therefore, $d'$ is not bounded.
 
-  #plain_box(title: [Exercise 6.1.1])[
+  #plain_box(title: [Definition 6.1.1])[
     A metric space $M$ is #glossary[bounded] if there is a constant $D$ such that $d(p, q) <= D$ for all $p, q in M$.
   ]
 
