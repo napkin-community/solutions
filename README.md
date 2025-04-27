@@ -15,6 +15,7 @@ npx serve dist
 To match Napkin's style, some fonts are required:
 
 - [Latin Modern Sans](https://www.gust.org.pl/projects/e-foundry/latin-modern) - For `#blue_box`.
+- [Pretendard](https://github.com/orioncactus/pretendard) - For Korean support.
 
 You'd better have the following tools for a better contribution experience
 
