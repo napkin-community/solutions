@@ -1,10 +1,10 @@
 name: build-then-deploy
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
 
 jobs:
   deploy:
-    # Only in main branch
-    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-24.04
     environment:
       name: github-pages
@@ -22,18 +22,22 @@ jobs:
       - uses: typst-community/setup-typst@v4
         with:
           typst-version: ^0.13.0
-      # Latin Modern Sans is not installed with typst
+      # Fonts not installed with typst
       - id: cache-fonts
         uses: actions/cache@v4
         with:
           path: fonts
-          key: ${{ runner.os }}-fonts
+          key: ${{ runner.os }}-fonts-1
       - if: steps.cache-fonts.outputs.cache-hit != 'true'
         run: |
-          curl -L -o latin-modern.zip https://www.gust.org.pl/projects/e-foundry/latin-modern/download/lm2.004otf.zip && \
+          curl -L -o latin-modern.zip \
+            'https://www.gust.org.pl/projects/e-foundry/latin-modern/download/lm2.004otf.zip' && \
           unzip latin-modern.zip -d fonts && \
-          curl -L -o Pretendard.zip https://github.com/orioncactus/pretendard/releases/download/v1.3.9/Pretendard-1.3.9.zip && \
-          unzip -j Pretendard.zip "public/static/*.otf" -d fonts
+          curl -L -o Bareonbatang.zip \
+            --referer 'https://copyright.keris.or.kr/wft/fntDwnldView' \
+            -d 'fntGrpId=GFT202301120000000000002&fntFileId=FTF202312080000000000070' \
+            'https://copyright.keris.or.kr/cmm/fntDwnldById' && \
+          unzip Bareonbatang.zip '*.otf' -d fonts
       - run: ./x build
         env:
           TYPST_FONT_PATHS: ./fonts
@@ -42,15 +46,3 @@ jobs:
           path: dist
       - id: deployment
         uses: actions/deploy-pages@v4
-  build:
-    if: ${{ github.ref != 'refs/heads/main' }}
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - uses: typst-community/setup-typst@v4
-        with:
-          typst-version: ^0.13.0
-      - run: ./x build
