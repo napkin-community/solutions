@@ -6,9 +6,7 @@
   conditions is $X$ compact?
 ]
 
-#solution(
-  users.simnalamburt,
-)[
+#solution(users.simnalamburt)[
   $X$는 이산공간이므로 아래와 $X$를 구성하는 집합은 아래와 같은 꼴이고
 
   $

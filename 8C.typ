@@ -9,9 +9,7 @@
   complements of finite sets. This makes $X$ into a topological space. Show that $X$ is quasicompact but not Hausdorff.
 ]
 
-#solution(
-  users.ranolp,
-)[
+#solution(users.ranolp)[
   #enum[
     For any open cover ${U_alpha}$, fix a non-empty open set $S in {U_alpha}$. \
     Due to cofinite topology, $S^C = X without S$ is finite. \

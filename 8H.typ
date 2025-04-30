@@ -17,9 +17,9 @@
     A metric space $M$ is #glossary[sequentially compact] if every sequence has a subsequence which converges.
   ]
 
-  Define $f(x) = inf_n (d(x, x_n) + 1/n)$, then $f(x) > 0$ since subsequence of $(x_n)$ never converges.
+  Define $f(x) = inf_n (d(x, x_n) + 1 / n)$, then $f(x) > 0$ since subsequence of $(x_n)$ never converges.
 
-  Define $d'(x, y) = d(x, y) + abs(1/f(x) - 1/f(y))$, then $d'$ is a metric.
+  Define $d'(x, y) = d(x, y) + abs(1 / f(x) - 1 / f(y))$, then $d'$ is a metric.
 
   #plain_box(title: [Definition 2.1.1])[
     A #glossary[metric space] is a pair $(M, d)$ consisting of a set of points $M$ and a #glossary[metric] $d : M times M arrow RR_(>=0)$. The distance function must obey:
@@ -83,12 +83,12 @@
 
   = 3. Unboundedness of $(M, d')$
 
-  Fix a point $p$, then there exists minimum integer $N > 1/f(p)$.
+  Fix a point $p$, then there exists minimum integer $N > 1 / f(p)$.
 
   For all $n in NN$, since $f(x_n) >= n$,
   $
-    d'(p, x_(n+N)) & = d(p, x_(n+N)) + abs(1/f(p) - 1/f(x_(n+N)))
-    \ & >= abs(N - 1/f(x_(n+N)))
+    d'(p, x_(n+N)) & = d(p, x_(n+N)) + abs(1 / f(p) - 1 / f(x_(n+N)))
+    \ & >= abs(N - 1 / f(x_(n+N)))
     \ & >= n.
   $
 
