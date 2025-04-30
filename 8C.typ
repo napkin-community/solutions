@@ -9,9 +9,7 @@
   complements of finite sets. This makes $X$ into a topological space. Show that $X$ is quasicompact but not Hausdorff.
 ]
 
-#solution(
-  users.ranolp,
-)[
+#solution(users.ranolp)[
   #enum[
     For any open cover ${U_alpha}$, fix a non-empty open set $S in {U_alpha}$. \
     Due to cofinite topology, $S^C = X without S$ is finite. \
@@ -23,9 +21,9 @@
   ][
 
     For any $p, q in X$ where $p != q$ and any open neighborhood of $p$ and $q$ called $U$ and $V$. \
-    If $U inter V = empty$ then $V subset.eq X without U$. \
+    If $U inter V = nothing$ then $V subset.eq X without U$. \
     However, due to cofinite topology, $V$ must be infinite, which cannot be a subset or equal to finite set $X without U$. \
-    Thus $U inter V != empty$. \
+    Thus $U inter V != nothing$. \
     Hence $X$ is not Hausdorff. $square$
   ]
 

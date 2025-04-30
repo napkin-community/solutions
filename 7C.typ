@@ -6,10 +6,10 @@
 ]
 
 #solution(users.kiwiyou)[
-  For every $q != p$, there exists two open neighbourhoods $U$ of $p$ and $V$ of $q$ s.t. $U sect V = empty$.
+  For every $q != p$, there exists two open neighbourhoods $U$ of $p$ and $V$ of $q$ s.t. $U inter V = nothing$.
 
   #plain_box(title: [Definition 7.3.1], subtitle: [Hausdorff])[
-    A topological space $X$ is #glossary[Hausdorff] if for any two distinct points $p, q in X$, there exists two open neighbourhoods $U$ of $p$ and $V$ of $q$ such that $ U sect V = empty. $
+    A topological space $X$ is #glossary[Hausdorff] if for any two distinct points $p, q in X$, there exists two open neighbourhoods $U$ of $p$ and $V$ of $q$ such that $ U inter V = nothing. $
   ]
 
   Let $ Y = union.big_attach(q in X without {p}) V. $

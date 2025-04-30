@@ -1,9 +1,7 @@
 #import "template/napkin.typ": *
 #import "template/napkin-users.typ": *
 
-#plain_box(
-  title: "Problem 1A",
-)[
+#plain_box(title: "Problem 1A")[
   What is the joke in the following figure? (Source: [#link(<img:snsd>)[#text(fill: color.rgb("339901"))[*Ge*]]].)
 ]
 

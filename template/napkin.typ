@@ -1,13 +1,3 @@
-
-/// Circle-shaped sym.nothing.
-///
-/// ```example
-/// #empty
-/// ```
-///
-/// -> content
-#let empty = text(font: "New Computer Modern")[#sym.nothing]
-
 /// End of the proof.
 ///
 /// ```example
@@ -15,7 +5,7 @@
 /// ```
 ///
 /// -> content
-#let qed = [#h(1fr) $square$]
+#let qed = [#h(1fr)#text(sym.square, font: "New Computer Modern Math")]
 
 /// Dagger.
 ///
@@ -24,7 +14,7 @@
 /// ```
 ///
 /// -> content
-#let dagger = super(sym.dagger)
+#let dagger = super(text(sym.dagger, font: "New Computer Modern Math"))
 
 /// Star.
 ///
@@ -33,7 +23,7 @@
 /// ```
 ///
 /// -> content
-#let star = super(sym.star)
+#let star = super(text(sym.star, font: "New Computer Modern Math"))
 
 /// Glossary.
 ///
@@ -64,8 +54,14 @@
   /// -> content
   content,
 ) = [
-  #set text(font: "New Computer Modern", size: 11pt)
-  #show math.equation: set text(font: "New Computer Modern Math")
+  #set text(
+    font: ("New Computer Modern", "Hakgyoansim Bareonbatang"),
+    size: 11pt,
+  )
+  #show math.equation: set text(
+    font: "New Computer Modern Math",
+    features: ("cv01",),
+  )
   #set par(spacing: 0.8em, justify: true)
   #content
 ]
@@ -189,7 +185,10 @@
     y: 1em,
   ),
   latexize[
-    #text(fill: rgb("008000"), font: "Latin Modern Sans")[#titlize(title, subtitle) #sym.dash.em]
+    #text(fill: rgb("008000"), font: "Latin Modern Sans")[#titlize(
+        title,
+        subtitle,
+      ) #sym.dash.em]
     #content
   ],
 )
@@ -314,7 +313,10 @@
   dy: 8pt,
   box(
     width: 60pt,
-    align(right, stack(dir: rtl, ..(image("chili.png", height: 15pt),) * count)),
+    align(
+      right,
+      stack(dir: rtl, ..(image("chili.png", height: 15pt),) * count),
+    ),
   ),
 )
 
@@ -349,9 +351,7 @@
       } else { }
       _by_ #box(baseline: 20%, radius: 2pt, clip: true)[#image(by.avatar.source, format: by.avatar.format, height: 1.2em)] #if by.name != by.login {
         [#by.name (#by.login)]
-      } else {
-        [#by.name]
-      }
+      } else { [#by.name] }
     ]
 
     #line(length: 100%, stroke: 0.5pt + gray)

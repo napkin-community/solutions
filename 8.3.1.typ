@@ -1,8 +1,6 @@
 #import "template/napkin.typ": *
 
-#black_note(
-  "Definition 8.3.1",
-)[
+#black_note("Definition 8.3.1")[
   An open cover of a topological space $X$ is a collection of open sets ${U_alpha}$ (possibly infinite or uncountable)
   which _cover_ it: every point in $X$ lies in at least one of the $U_alpha$, so that
   $
