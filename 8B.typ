@@ -16,7 +16,7 @@
   $X$의 토폴로지는 아래와 같다.
 
   $
-    tau = {empty, {x_1}, {x_2}, dots, {x_1, x_2}, {x_1, x_3}, dots, {x_1, x_2, x_3}, dots}
+    tau = {nothing, {x_1}, {x_2}, dots, {x_1, x_2}, {x_1, x_3}, dots, {x_1, x_2, x_3}, dots}
   $
 
   $X$ 가 유한 집합이면, $X$는 항상 compact하다. $X$의 모든 열린 덮개는, 아래와

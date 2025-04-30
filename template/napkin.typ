@@ -1,13 +1,3 @@
-
-/// Circle-shaped sym.nothing.
-///
-/// ```example
-/// #empty
-/// ```
-///
-/// -> content
-#let empty = text(sym.nothing, font: "New Computer Modern")
-
 /// End of the proof.
 ///
 /// ```example
@@ -68,7 +58,10 @@
     font: ("New Computer Modern", "Hakgyoansim Bareonbatang"),
     size: 11pt,
   )
-  #show math.equation: set text(font: "New Computer Modern Math")
+  #show math.equation: set text(
+    font: "New Computer Modern Math",
+    features: ("cv01",),
+  )
   #set par(spacing: 0.8em, justify: true)
   #content
 ]
