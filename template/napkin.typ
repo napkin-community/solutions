@@ -239,7 +239,7 @@
   subtitle: none,
 ) = block(
   width: 100%,
-  stroke: 1pt + blue,
+  stroke: 1pt + rgb("0000ff"),
   fill: rgb("f3fbfb"),
   radius: 0.5em,
   inset: 1em,
