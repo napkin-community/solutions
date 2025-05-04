@@ -57,6 +57,9 @@
                 |f(y) - f(x)| & <= d(x, y)                             \
   $
 
+  For all $epsilon > 0$,
+  $ d(x, y) < epsilon ==> |f(y) - f(x)| <= d(x, y) < epsilon. $
+
   Now that $abs(1 / f(x) - 1 / f(y))$ is continuous in $(M, d)$, there exists $delta_f$ such that
   $
     d(x, y) < delta_f ==> abs(1 / f(x) - 1 / f(y)) < epsilon.
@@ -85,10 +88,11 @@
 
   Fix a point $p$, then there exists minimum integer $N > 1 / f(p)$.
 
-  For all $n in NN$, since $f(x_n) >= n$,
+  For all $n in NN$, since $1 / f(x_n) >= n$,
   $
     d'(p, x_(n+N)) & = d(p, x_(n+N)) + abs(1 / f(p) - 1 / f(x_(n+N))) \
-                   & >= abs(N - 1 / f(x_(n+N)))                       \
+                   & = d(p, x_(n+N)) + 1 / f(x_(n+N)) - 1 / f(p)      \
+                   & >= n + N - N                                     \
                    & >= n.                                            \
   $
 
