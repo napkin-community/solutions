@@ -58,10 +58,9 @@
     font: ("New Computer Modern", "Hakgyoansim Bareonbatang"),
     size: 11pt,
   )
-  #show math.equation: set text(
-    font: "New Computer Modern Math",
-    features: ("cv01",),
-  )
+  #show math.equation: set text(font: "New Computer Modern Math", features: (
+    "cv01",
+  ))
   #set par(spacing: 0.8em, justify: true)
   #content
 ]
@@ -244,11 +243,10 @@
   radius: 0.5em,
   inset: 1em,
   latexize[
-    #text(
-      fill: rgb("006896"),
-      font: "Latin Modern Sans",
-      titlize(title, subtitle),
-    )
+    #text(fill: rgb("006896"), font: "Latin Modern Sans", titlize(
+      title,
+      subtitle,
+    ))
 
     #content
   ],
@@ -308,17 +306,10 @@
   /// Number of chili peppers. Maximum 3.
   /// -> int
   count,
-) = place(
-  dx: -65pt,
-  dy: 8pt,
-  box(
-    width: 60pt,
-    align(
-      right,
-      stack(dir: rtl, ..(image("chili.png", height: 15pt),) * count),
-    ),
-  ),
-)
+) = place(dx: -65pt, dy: 8pt, box(width: 60pt, align(right, stack(
+  dir: rtl,
+  ..(image("chili.png", height: 15pt),) * count,
+))))
 
 // == Belows are napkin-community/solutions only components ==
 
