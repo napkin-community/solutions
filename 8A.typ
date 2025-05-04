@@ -24,5 +24,5 @@
 
   Since $f$ is a homeomorphism, ${f^("img")(V_n)}^N_(n=1)$ is a finite subcover of ${U_alpha}$ which covers $(0, 1)$.
 
-  This is a contradiction, so $[0, 1]$ and $(0, 1)$ cannot be homeomorphic. #qed
+  This is a contradiction, so $[0, 1]$ and $(0, 1)$ cannot be homeomorphic. #h(1fr) #sym.qed
 ]

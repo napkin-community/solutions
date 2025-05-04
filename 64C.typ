@@ -1,7 +1,7 @@
 #import "template/napkin.typ": *
 #import "template/napkin-users.typ": *
 
-#plain_box(title: [Problem 64C#dagger])[
+#plain_box(title: [Problem 64C#daggered])[
   Show that a finite CW complex is compact.
 ]
 

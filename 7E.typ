@@ -26,9 +26,9 @@
 
     Then $S = (A inter S) union.sq (B inter S)$, and both $A inter S$ and $B inter S$ are nonempty and open in $S$.
 
-    This is contradiction, so $C$ is connected. #qed
+    This is contradiction, so $C$ is connected. #sym.qed
 
   2. *No.*
 
-    The connected components of $p in bb(Q)$ is not an open subset of $bb(Q)$. #qed
+    The connected components of $p in bb(Q)$ is not an open subset of $bb(Q)$. #sym.qed
 ]

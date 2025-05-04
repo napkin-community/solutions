@@ -5,7 +5,7 @@
 
 #chili(1)
 #plain_box(
-  title: [Problem 8F#dagger],
+  title: [Problem 8F#daggered],
   subtitle: [Bolzano-Weierstraß theorem for general metric spaces],
 )[
   Prove that a metric space $M$ is sequentially compact if and only if it is complete and totally bounded.

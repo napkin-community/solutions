@@ -1,29 +1,20 @@
-/// End of the proof.
+/// Daggered problem.
 ///
 /// ```example
-/// #qed
+/// #latexize[#daggered]
 /// ```
 ///
 /// -> content
-#let qed = [#h(1fr)#text(sym.square, font: "New Computer Modern Math")]
+#let daggered = super(text(sym.dagger, font: "New Computer Modern Math"))
 
-/// Dagger.
+/// Starred problem.
 ///
 /// ```example
-/// #latexize[#dagger]
+/// #latexize[#starred]
 /// ```
 ///
 /// -> content
-#let dagger = super(text(sym.dagger, font: "New Computer Modern Math"))
-
-/// Star.
-///
-/// ```example
-/// #latexize[#star]
-/// ```
-///
-/// -> content
-#let star = super(text(sym.star, font: "New Computer Modern Math"))
+#let starred = super(text(sym.star, font: "New Computer Modern Math"))
 
 /// Glossary.
 ///
@@ -138,7 +129,7 @@
   ),
   fill: rgb("fafafa"),
   inset: (
-    left: 3pt + 1em,
+    left: 1em,
     right: 1em,
     y: 1em,
   ),

@@ -98,5 +98,5 @@
     A metric space $M$ is #glossary[bounded] if there is a constant $D$ such that $d(p, q) <= D$ for all $p, q in M$.
   ]
 
-  Since the contrapositive is proven, $M$ is compact. #qed
+  Since the contrapositive is proven, $M$ is compact. #h(1fr) #sym.qed
 ]

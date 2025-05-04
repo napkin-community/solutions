@@ -33,7 +33,7 @@
 
   For all subsequence ${x_(gamma_n)}$, $d(x_1, x_(gamma_n)) > n - 1$, so ${x_(gamma_n)}$ does not converge to $x$.
 
-  This is contradiction, so $X$ is not compact. #qed
+  This is contradiction, so $X$ is not compact. #h(1fr) #sym.qed
 
   #plain_box(title: [Definition 6.1.1])[
     A metric space $M$ is #glossary[sequentially compact] if every sequence has a subsequence which converges.
