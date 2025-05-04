@@ -11,9 +11,6 @@
   *Claim.* Finite disjoint union of quasicompact spaces is quasicompact.\
   Consider an open cover ${U_alpha}$ of $A union.plus B$. We denote the included indices of the finite subcovers of the projected subcovers by $Beta_A$ and $Beta_B$. There exists a finite subcover of ${U_alpha}$: ${U_alpha | alpha in Beta_A union Beta_B }$.
 
-  *Claim.* Finite disjoint union of Hausdorff spaces is Hausdorff.\
-  Two points in different components can take each component as their neighbors.
-
   *Claim.* A quotient space of a quasicompact space is quasicompact.\
   Consider an open cover ${U_alpha}$ of $X slash ~$. Then, let $V_alpha = {x | [x] in U_alpha}$, and ${V_alpha}$ is an open cover of $X$. Let $Beta$ the included indices of the finite subcover. Then ${U_alpha | alpha in Beta}$ is the finite subcover of ${U_alpha}$.
 
