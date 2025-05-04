@@ -50,11 +50,11 @@
 
   First, $f$ is continuous in $(M, d)$.
   $
-    d(y, x_n) & <= d(x, y) + d(x, x_n)
-    \ d(y, x_n) + 1 / n & <= d(x, y) + d(x, x_n) + 1 / n
-    \ inf_n (d(y, x_n) + 1 / n) & <= d(x, y) + inf_n (d(x, x_n) + 1 / n)
-    \ f(y) & <= d(x, y) + f(x)
-    \ |f(y) - f(x)| & <= d(x, y)
+                    d(y, x_n) & <= d(x, y) + d(x, x_n)                 \
+            d(y, x_n) + 1 / n & <= d(x, y) + d(x, x_n) + 1 / n         \
+    inf_n (d(y, x_n) + 1 / n) & <= d(x, y) + inf_n (d(x, x_n) + 1 / n) \
+                         f(y) & <= d(x, y) + f(x)                      \
+                |f(y) - f(x)| & <= d(x, y)                             \
   $
 
   Now that $abs(1 / f(x) - 1 / f(y))$ is continuous in $(M, d)$, there exists $delta_f$ such that
@@ -87,9 +87,9 @@
 
   For all $n in NN$, since $f(x_n) >= n$,
   $
-    d'(p, x_(n+N)) & = d(p, x_(n+N)) + abs(1 / f(p) - 1 / f(x_(n+N)))
-    \ & >= abs(N - 1 / f(x_(n+N)))
-    \ & >= n.
+    d'(p, x_(n+N)) & = d(p, x_(n+N)) + abs(1 / f(p) - 1 / f(x_(n+N))) \
+                   & >= abs(N - 1 / f(x_(n+N)))                       \
+                   & >= n.                                            \
   $
 
   Therefore, $d'$ is not bounded.
