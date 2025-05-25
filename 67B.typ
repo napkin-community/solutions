@@ -10,7 +10,7 @@
 
   Define the coproduct as
   $
-    X + Y = X product.co Y \
+    X + Y = X coproduct Y \
     iota_X (x) = (x, 0) \
     iota_Y (y) = (y, 1)
   $
@@ -42,7 +42,7 @@
     (f compose iota_Y) (bold("y")) = f((bold("0")_X, bold("y"))) = h(bold("y"))
   $
 
-  Since $f((bold("x"), bold("y")) = f(bold("x"), bold("0")_Y) + f((bold("0")_X, bold("y"))) = g(bold("x")) + h(bold("y"))$,
+  Since $f((bold("x"), bold("y"))) = f((bold("x"), bold("0")_Y)) + f((bold("0")_X, bold("y"))) = g(bold("x")) + h(bold("y"))$,
   this uniquely determines $f$ for all $(bold("x"), bold("y")) in X + Y$. #h(1fr) #sym.qed
 
   == Coproduct in a poset

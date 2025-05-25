@@ -16,6 +16,15 @@
 /// -> content
 #let starred = super(text(sym.star, font: "New Computer Modern Math"))
 
+/// Coproduct.
+///
+/// ```example
+/// #coproduct
+/// ```
+///
+/// -> content
+#let coproduct = scale(sym.Pi, y: -100%)
+
 /// Glossary.
 ///
 /// #example(```
