@@ -1,6 +1,7 @@
 #import "template/napkin.typ": *
 #import "template/napkin-users.typ": *
-#import "@preview/fletcher:0.5.7" as fletcher: diagram, edge, node
+#import "@preview/fletcher:0.5.7" as fletcher: diagram, node
+#let edge = fletcher.edge.with(marks: "-|>")
 
 #plain_box(title: [Problem 67C])[
   In any category $cal(A)$ where all products exist, show that
@@ -44,21 +45,19 @@
       node((2, 1), $Z$, name: <Z>),
       node((1, -2), $X times Y$, name: <XY>),
       node((4, -2), $X times (Y times Z)$, name: <X_YZ>),
-      edge(<XY_Z>, <XY>, "-|>", label: $p := pi^(X times Y)_(X times Y, Z)$),
+      edge(<XY_Z>, <XY>, label: $p := pi^(X times Y)_(X times Y, Z)$),
       edge(
         <XY_Z>,
         <Z>,
-        "-|>",
         label: $q := pi^Z_(X times Y, Z)$,
         label-side: right,
         label-sep: 10pt,
       ),
-      edge(<YZ>, <Y>, "-|>", label: $r := pi^Y_(Y, Z)$, label-side: left),
-      edge(<YZ>, <Z>, "-|>", label: $s := pi^Z_(Y, Z)$, label-side: left),
+      edge(<YZ>, <Y>, label: $r := pi^Y_(Y, Z)$, label-side: left),
+      edge(<YZ>, <Z>, label: $s := pi^Z_(Y, Z)$, label-side: left),
       edge(
         <X_YZ>,
         <X>,
-        "-|>",
         label: $u := pi^X_(X, Y times Z)$,
         label-side: right,
         label-sep: 10pt,
@@ -66,16 +65,14 @@
       edge(
         <X_YZ>,
         <YZ>,
-        "-|>",
         label: $v := pi^(Y times Z)_(X, Y times Z)$,
         label-side: left,
       ),
-      edge(<XY>, <X>, "-|>", label: $alpha := pi^X_(X, Y)$),
-      edge(<XY>, <Y>, "-|>", label: $beta := pi^Y_(X, Y)$),
+      edge(<XY>, <X>, label: $alpha := pi^X_(X, Y)$),
+      edge(<XY>, <Y>, label: $beta := pi^Y_(X, Y)$),
       edge(
         <XY_Z>,
         <YZ>,
-        "-|>",
         label: text(blue, $angle.l beta compose p, q angle.r$),
         stroke: (paint: blue),
         label-side: right,
@@ -83,7 +80,6 @@
       edge(
         <XY_Z>,
         <X_YZ>,
-        "-|>",
         label: text(
           blue,
           $f := angle.l alpha compose p, angle.l beta compose p, q angle.r angle.r$,
@@ -98,14 +94,12 @@
       edge(
         <X_YZ>,
         <XY>,
-        "-|>",
         label: text(orange, $angle.l u, r compose v angle.r$),
         stroke: (paint: orange),
       ),
       edge(
         <X_YZ>,
         <XY_Z>,
-        "-|>",
         label: text(
           orange,
           $g := angle.l angle.l u, r compose v angle.r, s compose v angle.r$,
