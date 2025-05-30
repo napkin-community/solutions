@@ -1,6 +1,6 @@
 #import "template/napkin.typ": *
 #import "template/napkin-users.typ": *
-#import "@preview/fletcher:0.5.7" as fletcher: diagram, node, edge
+#import "@preview/fletcher:0.5.7" as fletcher: diagram, edge, node
 
 #set page(height: auto)
 
