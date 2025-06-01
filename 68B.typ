@@ -25,7 +25,7 @@
   #enum.item[
     $|F(A)|=|G(A)|$, hence $F(A) tilde.equiv G(A)$.
 
-    Consider $A={0, 1}$, and an arrow $f : A -> A =x mapsto 1 - x$. Let $alpha_A$ be an isomorphism from $F(A)$ to $G(A)$.\
+    Consider $A={0, 1}$, and an arrow $f : A -> A = x mapsto 1 - x$. Let $alpha_A$ be an isomorphism from $F(A)$ to $G(A)$.\
     Since conjugation has no effect on permutations on two-element set, $alpha_A compose F(f)=alpha_A$. On the other hand, $G(f) compose alpha_A = "reverse" compose alpha_A$. The two cannot be equal, thus this isomorphism is not natural.
   ]
 ]
