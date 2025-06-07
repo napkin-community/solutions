@@ -16,9 +16,13 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: pnpm
       - uses: typst-community/setup-typst@v4
         with:
           typst-version: ^0.13.0
@@ -38,11 +42,12 @@ jobs:
             -d 'fntGrpId=GFT202301120000000000002&fntFileId=FTF202312080000000000070' \
             'https://copyright.keris.or.kr/cmm/fntDwnldById' && \
           unzip Bareonbatang.zip '*.otf' -d fonts
-      - run: ./x build
-        env:
-          TYPST_FONT_PATHS: ./fonts
+      - working-directory: www
+        run: pnpm install
+      - working-directory: www
+        run: pnpm run build
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: www/dist
       - id: deployment
         uses: actions/deploy-pages@v4

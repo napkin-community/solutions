@@ -23,3 +23,5 @@ jobs:
         with:
           typst-version: ^0.13.0
       - run: ./x check
+        env:
+          TYPST_FONT_PATHS: ./fonts
