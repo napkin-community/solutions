@@ -13,3 +13,5 @@
   )[A #glossary[subcover] is exactly what it sounds like: it takes only some of the $U_alpha$, while ensuring that $X$ remains
     covered.]
 ]
+
+#skip-from-build()

@@ -1,0 +1,11 @@
+---
+import { renderToSVGString } from '../lib/typst';
+
+export interface Props {
+  code: string;
+}
+
+const renderred = await renderToSVGString(Astro.props.code);
+---
+
+<div set:html={renderred.svg} />

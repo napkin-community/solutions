@@ -1,0 +1,58 @@
+---
+import type { GetStaticPaths } from 'astro';
+import {
+  getChapters,
+  getChapterContents,
+  getChapterName,
+} from '../lib/chapter';
+import Layout from '../layouts/Layout.astro';
+import Typst from '../components/Typst.astro';
+
+export const getStaticPaths = (async () => {
+  const chapters = await getChapters();
+  return chapters.map((chapter) => ({ params: { chapter: chapter.id } }));
+}) satisfies GetStaticPaths;
+
+const { chapter } = Astro.params;
+const content = await getChapterContents(chapter);
+---
+
+<Layout title={`@napkin-community/solutions > ${getChapterName(chapter)}`}>
+  <div id="top"/>
+  <a href=".">Back to Chapter Selection</a>
+  <h2>Table of Contents</h2>
+  <ol>
+    {
+      content.map(({ id, display }) => (
+        <li>
+          <a href={`#${id}`}>{display}</a>
+        </li>
+      ))
+    }
+  </ol>
+  {
+    content.map(({ id, display, body }) => (
+      <h2 id={id}>{display}  <a class="go-to-top" href="#top">Go To Top</a></h2>
+      <Typst code={`
+        #set page(
+          margin: (left: 6em, right: 6em, top: 0em, bottom: 0em),
+          height: auto,
+        )
+        ${body}  
+      `}/>
+    ))
+  }
+</Layout>
+
+<style>
+  ol {
+    list-style: none;
+  }
+  :global(svg) {
+    max-width: 80em;
+  }
+  a.go-to-top {
+    vertical-align: super;
+    font-size: 0.75em;
+  }
+</style>
