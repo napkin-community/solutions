@@ -43,8 +43,9 @@ switch (positionals[0]) {
   case 'register':
     await register(positionals[1]);
     break;
-  case 'build':
-    await build(values);
+  case 'check':
+    await check();
+    break;
 }
 
 function showHelpThenExit(code = 0) {
@@ -55,7 +56,6 @@ Usage: ./x [-v | --version] [-h | --help]
 
   register <github-handle>      Fetch GitHub profile from handle and download
                                 the profile to register it to users
-  build                         Build a website displaying solutions
 `);
   process.exit(code);
 }
@@ -78,9 +78,9 @@ async function register(handle) {
   const avatarFormat = avatarMime.replace(/^image\//, '');
   const avatarFilename = `${handle.toLowerCase()}.${avatarFormat}`;
 
-  const avatar = await fetch(payload.avatar_url)
-  const file = createWriteStream(path.join(targetDir, avatarFilename))
-  await finished(Readable.fromWeb(avatar.body).pipe(file))
+  const avatar = await fetch(payload.avatar_url);
+  const file = createWriteStream(path.join(targetDir, avatarFilename));
+  await finished(Readable.fromWeb(avatar.body).pipe(file));
 
   await fs.writeFile(
     path.join(targetDir, `${handle.toLowerCase()}.json`),
@@ -111,7 +111,12 @@ async function register(handle) {
   log(`Update \x1B[4mtemplate/napkin-users.typ\x1B[0m...`);
 
   const wholeUsers = (await fs.readdir(targetDir))
-    .flatMap(x => x.match(/^([a-zA-Z\d](?:[a-zA-Z\d]|-(?=[a-zA-Z\d])){0,38})\.json$/)?.[1] ?? [])
+    .flatMap(
+      (x) =>
+        x.match(
+          /^([a-zA-Z\d](?:[a-zA-Z\d]|-(?=[a-zA-Z\d])){0,38})\.json$/,
+        )?.[1] ?? [],
+    )
     .toSorted((a, b) => a.localeCompare(b));
   await fs.writeFile(
     `template/napkin-users.typ`,
@@ -134,146 +139,28 @@ async function register(handle) {
   );
 }
 
-async function build() {
-  const dist = 'dist/';
-  log(`Clean build the website to \x1B[4m${dist}\x1B[0m...`);
-  await fs.rm(dist, { recursive: true, force: true });
-  await fs.mkdir(dist, { recursive: true });
-
-  const problems = await fs.readdir('.');
-  const compiledProblems = (
-    await Promise.all(
-      problems.map(async (filename) => {
-        const group = /^([0-9]+)([A-Z]+)\.typ$/.exec(filename);
-        if (!group) return null;
-        const [_, chapter, problemCode] = group;
-        log(`typst compile --root . -f svg ${filename} -`, '$');
-        return {
-          chapter,
-          fullProblemCode: `${chapter}${problemCode}`,
-          problemCode,
-          svg: (
-            await $(`typst compile --root . -f svg - -`, {
-              stdin: dedent(`
-                | #set page(margin: 2em, height: auto)
-                | ${await fs.readFile(filename, { encoding: 'utf-8' })}
-              `),
-              silent: true,
-              requireValue: true,
-            })
-          ).stdout,
-        };
-      }),
-    )
-  ).filter(Boolean);
-  compiledProblems.sort((a, b) => {
-    if (a.chapter != b.chapter) {
-      return a.chapter - b.chapter;
-    }
-    return a.problemCode.localeCompare(b);
+async function check() {
+  // install
+  const { error } = await $(`typst compile - - > /dev/null`, {
+    stdin: `
+      #import "@preview/fletcher:0.5.7"
+    `,
   });
-
-  const chapters = Array.from(
-    new Set(compiledProblems.map(({ chapter }) => chapter)),
+  if (error) throw error;
+  // build
+  const files = (await fs.readdir('.')).filter((x) => x.match(/.typ$/));
+  log(`Checking ${files.length} files...`);
+  let counter = 0;
+  await Promise.all(
+    files.map(async (file) => {
+      const result = await $(`typst compile ${file} - > /dev/null`);
+      if (result.error) {
+        throw result.error;
+      }
+      counter += 1;
+      log(`[${counter}/${files.length}] ${file}`, 'check');
+    }),
   );
-  for (const chapter of chapters) {
-    log(`Building \x1B[4m${chapter}.html\x1B[0m...`);
-    const problems = compiledProblems.filter(
-      (problem) => problem.chapter === chapter,
-    );
-    await fs.writeFile(
-      path.join(dist, `${chapter}.html`),
-      dedent(`
-          | <!DOCTYPE html>
-          | <head>
-          | <style>
-          | ol { list-style: none; }
-          | svg { max-width: 80em; }
-          | </style>
-          | <body>
-          | <h1>@napkin-community/solutions &gt; Chapter ${chapter}</h1>
-          | <a href=".">Back to Chapter Selection</a>
-          | <h2>Table of Contents</h2>
-          | <ol>
-          ${problems
-            .map((problem) =>
-              dedent(`
-                | <li>
-                | <a href="#${problem.fullProblemCode}">${problem.fullProblemCode}</a>
-                | </li>
-              `),
-            )
-            .join('\n')}
-          | </ol>
-          ${problems
-            .map((problem) =>
-              dedent(`
-                | <h2 id="${problem.fullProblemCode}">${problem.fullProblemCode}</h2>
-                | ${problem.svg}
-              `),
-            )
-            .join('\n')}
-          | <script>
-          |   for (const doc of document.querySelectorAll('svg.typst-doc')) {
-          |     doc.removeAttribute('width');
-          |     doc.removeAttribute('height');
-          |   }
-          | </script>
-        `),
-      { encoding: 'utf-8' },
-    );
-  }
-
-  log('Building \x1B[4mindex.html\x1B[0m');
-  await fs.writeFile(
-    path.join(dist, 'index.html'),
-    dedent(`
-      | <!DOCTYPE html>
-      | <head>
-      | <style>
-      | ol {
-      |   list-style: none;
-      |   width: 100svw;
-      |   padding: 2rem;
-      |   display: grid;
-      |   gap: 2rem;
-      |   grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
-      | }
-      | li {
-      |   aspect-ratio: 3 / 4;
-      |   border: 2px solid black;
-      |   border-radius: 0.25rem;
-      |   font-size: 2rem;
-      | }
-      | li > a {
-      |   width: 100%;
-      |   height: 100%;
-      |   padding: 0.5rem;
-      |   display: flex;
-      |   flex-direction: column;
-      |   align-items: center;
-      |   justify-content: end;
-      |   text-decoration: none;
-      |   color: unset;
-      | }
-      | </style>
-      | <body>
-      | <h1>@napkin-community/solutions</h1>
-      | <ol>
-      ${chapters
-        .map((chapter) =>
-          dedent(`
-            | <li>
-            | <a href="${chapter}.html">Ch. ${chapter}</a>
-            | </li>
-          `),
-        )
-        .join('\n')}
-      | </ol>
-    `),
-    { encoding: 'utf-8' },
-  );
-  log('Done!');
 }
 
 /**
@@ -285,7 +172,7 @@ async function build() {
  *   requireValue?: boolean;
  * }}}
  *
- * @returns {Promise<{ stdout: string, stderr: string }>}
+ * @returns {Promise<{ error: unknown; stdout: string, stderr: string }>}
  */
 function $(command, { cwd, stdin, silent = false, requireValue = false } = {}) {
   if (!silent) log(command, '$');
@@ -297,7 +184,7 @@ function $(command, { cwd, stdin, silent = false, requireValue = false } = {}) {
         stdio: requireValue ? 'pipe' : silent ? 'ignore' : 'inherit',
         encoding: 'utf-8',
       },
-      (error, stdout, stderr) => resolve({ stdout, stderr }),
+      (error, stdout, stderr) => resolve({ error, stdout, stderr }),
     );
     if (stdin != null) {
       process.stdin.write(stdin);
@@ -313,8 +200,11 @@ function $(command, { cwd, stdin, silent = false, requireValue = false } = {}) {
  * @returns {undefined}
  */
 function log(string, level = 'i') {
-  const c = {'$': '33', '!': '31' }[level] ?? '34';
-  console.log(`    \x1B[${c}m[${level}]\x1B[0m    ${string}`);
+  const prefix =
+    { $: `\x1B[33m[$]\x1B[0m`, '!': `\x1B[31m[i]\x1B[0m`, check: '✅' }[
+      level
+    ] ?? `\x1B[34m[${level}]\x1B[0m`;
+  console.log(`    ${prefix}    ${string}`);
 }
 
 /**

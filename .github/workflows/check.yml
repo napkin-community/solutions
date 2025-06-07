@@ -22,4 +22,6 @@ jobs:
       - uses: typst-community/setup-typst@v4
         with:
           typst-version: ^0.13.0
-      - run: ./x build
+      - run: ./x check
+        env:
+          TYPST_FONT_PATHS: ./fonts

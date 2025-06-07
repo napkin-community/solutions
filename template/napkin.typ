@@ -350,3 +350,5 @@
     #content
   ],
 )
+
+#let skip-from-build() = [ #metadata(true) <skip-from-build>]
