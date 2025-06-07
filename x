@@ -140,6 +140,14 @@ async function register(handle) {
 }
 
 async function check() {
+  // install
+  const { error } = await $(`typst compile - - > /dev/null`, {
+    stdin: `
+      #import "@preview/fletcher:0.5.7"
+    `,
+  });
+  if (error) throw error;
+  // build
   const files = (await fs.readdir('.')).filter((x) => x.match(/.typ$/));
   log(`Checking ${files.length} files...`);
   let counter = 0;
