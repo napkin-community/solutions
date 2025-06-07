@@ -43,8 +43,9 @@ switch (positionals[0]) {
   case 'register':
     await register(positionals[1]);
     break;
-  case 'build':
-    await build(values);
+  case 'check':
+    await check();
+    break;
 }
 
 function showHelpThenExit(code = 0) {
@@ -55,7 +56,6 @@ Usage: ./x [-v | --version] [-h | --help]
 
   register <github-handle>      Fetch GitHub profile from handle and download
                                 the profile to register it to users
-  build                         Build a website displaying solutions
 `);
   process.exit(code);
 }
@@ -78,9 +78,9 @@ async function register(handle) {
   const avatarFormat = avatarMime.replace(/^image\//, '');
   const avatarFilename = `${handle.toLowerCase()}.${avatarFormat}`;
 
-  const avatar = await fetch(payload.avatar_url)
-  const file = createWriteStream(path.join(targetDir, avatarFilename))
-  await finished(Readable.fromWeb(avatar.body).pipe(file))
+  const avatar = await fetch(payload.avatar_url);
+  const file = createWriteStream(path.join(targetDir, avatarFilename));
+  await finished(Readable.fromWeb(avatar.body).pipe(file));
 
   await fs.writeFile(
     path.join(targetDir, `${handle.toLowerCase()}.json`),
@@ -111,7 +111,12 @@ async function register(handle) {
   log(`Update \x1B[4mtemplate/napkin-users.typ\x1B[0m...`);
 
   const wholeUsers = (await fs.readdir(targetDir))
-    .flatMap(x => x.match(/^([a-zA-Z\d](?:[a-zA-Z\d]|-(?=[a-zA-Z\d])){0,38})\.json$/)?.[1] ?? [])
+    .flatMap(
+      (x) =>
+        x.match(
+          /^([a-zA-Z\d](?:[a-zA-Z\d]|-(?=[a-zA-Z\d])){0,38})\.json$/,
+        )?.[1] ?? [],
+    )
     .toSorted((a, b) => a.localeCompare(b));
   await fs.writeFile(
     `template/napkin-users.typ`,
@@ -134,6 +139,22 @@ async function register(handle) {
   );
 }
 
+async function check() {
+  const files = (await fs.readdir('.')).filter((x) => x.match(/.typ$/));
+  log(`Checking ${files.length} files...`);
+  let counter = 0;
+  await Promise.all(
+    files.map(async (file) => {
+      const result = await $(`typst compile ${file} - > /dev/null`);
+      if (result.error) {
+        throw result.error;
+      }
+      counter += 1;
+      log(`[${counter}/${files.length}] ${file}`, 'check');
+    }),
+  );
+}
+
 /**
  *
  * @param command {string
@@ -143,7 +164,7 @@ async function register(handle) {
  *   requireValue?: boolean;
  * }}}
  *
- * @returns {Promise<{ stdout: string, stderr: string }>}
+ * @returns {Promise<{ error: unknown; stdout: string, stderr: string }>}
  */
 function $(command, { cwd, stdin, silent = false, requireValue = false } = {}) {
   if (!silent) log(command, '$');
@@ -155,7 +176,7 @@ function $(command, { cwd, stdin, silent = false, requireValue = false } = {}) {
         stdio: requireValue ? 'pipe' : silent ? 'ignore' : 'inherit',
         encoding: 'utf-8',
       },
-      (error, stdout, stderr) => resolve({ stdout, stderr }),
+      (error, stdout, stderr) => resolve({ error, stdout, stderr }),
     );
     if (stdin != null) {
       process.stdin.write(stdin);
@@ -171,8 +192,11 @@ function $(command, { cwd, stdin, silent = false, requireValue = false } = {}) {
  * @returns {undefined}
  */
 function log(string, level = 'i') {
-  const c = {'$': '33', '!': '31' }[level] ?? '34';
-  console.log(`    \x1B[${c}m[${level}]\x1B[0m    ${string}`);
+  const prefix =
+    { $: `\x1B[33m[$]\x1B[0m`, '!': `\x1B[31m[i]\x1B[0m`, check: '✅' }[
+      level
+    ] ?? `\x1B[34m[${level}]\x1B[0m`;
+  console.log(`    ${prefix}    ${string}`);
 }
 
 /**
