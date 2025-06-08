@@ -66,7 +66,7 @@
       node((3, 4), $Y$),
     )
 
-    If we set $F((id_X, id_Y)) = id_(X times Y)$ we get the desired properties. And since the morphism is unique, the functor $F$ preserves identity.
+    Let's place $id_(X times Y)$ on the position of $F((id_X, id_Y))$, then we get the desired properties. And since the morphism is unique, there's no way to construct morphism other than $id_(X times Y)$. Thus the functor $F$ preserves identity.
   ][
     *Preservation of Composition*
 
@@ -125,7 +125,7 @@
       node((5, 4), $B$),
     )
 
-    We know that $F((f_2 compose f_1, g_2 compose g_1))$ is unique so
+    Since the morphism $F((f_2 compose f_1, g_2 compose g_1))$ satisfying desired properties is unique so
 
     $F((f_2 compose f_1, g_2 compose g_1)) = F((f_2, g_2)) compose F((f_1, g_1))$
   ]
