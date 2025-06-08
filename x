@@ -19,6 +19,7 @@ Usage:
                                 the profile to register it to users
   check                         Check whether the typst source file valid
   prepare-fonts                 Prepare fonts for Typst
+  capture <filename.typ>        Capture the typst rendered using imagemagick
   -h, --help                    Display this help message
 EOF
   exit "${1:-0}"
@@ -124,7 +125,7 @@ print ")\n";
     fi
 
     # Fetch dependencies (fletcher, cetz, etc.)
-    typst compile - - > /dev/null <<< '#import "@preview/fletcher:0.5.7"'
+    typst compile --font-path fonts - - > /dev/null <<< '#import "@preview/fletcher:0.5.7"'
     # Parallel build
     find . -maxdepth 1 -name '*.typ' -print0 |
       xargs -0 -P0 -I{} bash -c 'echo "Checking {} ..." && typst compile -f pdf "{}" /dev/null' || {
@@ -167,6 +168,56 @@ EOF
     unzip -qo ./fonts/bareon-batang.zip '*.otf' -d ./fonts
 
     echo -e "✅ \x1b[1;92mFonts are prepared!\x1b[0m"
+    exit 0;;
+
+
+  #
+  # Capture the typst rendered using imagemagick
+  #
+  capture)
+    # Parse ARGV[2]
+    if (( $# != 2)); then
+      echo "Usage: ${0} capture <filename.typ>"
+      exit 1
+    fi
+    FILENAME="${2}"
+
+    # Check if dependencies are installed
+    if ! which -s typst magick; then
+      echo "Error: Please install 'typst', and 'magick'"
+      exit 1
+    fi
+
+    # Render into PNG
+    ENCODED_PNG=$(
+      cat - "${FILENAME}" <<< "#set page(margin: (left: 6em, right: 6em, top: 2em, bottom: 2em), height: auto)" |
+        typst compile --font-path fonts -f svg - - |
+        magick svg:- png:- |
+        base64
+    )
+
+    if command -v osascript >/dev/null; then
+      # On macOS
+      base64 -d <<< "${ENCODED_PNG}" > .tmp.png
+      osascript \
+        -e 'on run args' \
+        -e 'set the clipboard to (read (POSIX file (first item of args)) as picture)' \
+        -e 'end' \
+        ./.tmp.png
+      rm ./.tmp.png
+      exit 0
+    else
+      # On Linux
+      if command -v wl-copy >/dev/null; then
+        COPY=pbcopy
+      elif command -v xcopy >/dev/null; then
+        COPY=xcopy
+      else
+        echo "Error: Please install 'xcopy', or 'wl-copy' to copy the image to clipboard"
+        exit 1
+      fi
+      base64 -d <<< "${ENCODED_PNG}" | "${COPY}"
+    fi
     exit 0;;
 
 
