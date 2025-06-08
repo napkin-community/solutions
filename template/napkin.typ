@@ -311,6 +311,15 @@
   ..(image("chili.png", height: 15pt),) * count,
 ))))
 
+/// Cite other.
+///
+/// #example(```
+/// #latexize[#respect[Le14]]
+/// ```)
+///
+/// -> content
+#let respect(who) = [\[#text(fill: rgb("339900"), size: 0.8em, who)\]]
+
 // == Belows are napkin-community/solutions only components ==
 
 /// The solution box
