@@ -11,7 +11,7 @@ const aFewHarderProblems = defineCollection({
 const exercises = defineCollection({
   loader: glob({
     base: '../',
-    pattern: '+([0-9])+(.+[0-9]).typ',
+    pattern: '+([0-9]).+([.0-9]).typ',
   }),
 });
 
