@@ -18,7 +18,7 @@ const exercises = defineCollection({
 const respect = defineCollection({
   loader: glob({
     base: '../',
-    pattern: 'Le14-+([0-9])+(.+[0-9]).typ',
+    pattern: 'Le14-+([.0-9]).typ',
   }),
 });
 
