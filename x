@@ -45,6 +45,8 @@ switch (positionals[0]) {
     break;
   case 'check':
     await check();
+  case 'prepare-fonts':
+    await prepareFonts();
     break;
 }
 
@@ -57,6 +59,7 @@ Usage: ./x [-v | --version] [-h | --help]
   register <github-handle>      Fetch GitHub profile from handle and download
                                 the profile to register it to users
   check                         Check whether the typst source file valid
+  prepare-fonts                 Prepare fonts for Typst
 `);
   process.exit(code);
 }
@@ -164,6 +167,29 @@ async function check() {
   );
 }
 
+async function prepareFonts() {
+  await $(
+    `
+      curl -L -o latin-modern.zip \\
+        'https://www.gust.org.pl/projects/e-foundry/latin-modern/download/lm2.004otf.zip'
+    `.trim(),
+    { throwError: true },
+  );
+  await $(`unzip -f latin-modern.zip -d fonts`, { throwError: true });
+  await $(
+    `
+      curl -L -o Bareonbatang.zip \\
+        --referer 'https://copyright.keris.or.kr/wft/fntDwnldView' \\
+        -d 'fntGrpId=GFT202301120000000000002&fntFileId=FTF202312080000000000070' \\
+        'https://copyright.keris.or.kr/cmm/fntDwnldById';
+    `.trim(),
+    { throwError: true },
+  );
+  await $(`unzip -f Bareonbatang.zip '*.otf' -d fonts`, { throwError: true });
+  await fs.unlink('latin-modern.zip');
+  await fs.unlink('Bareonbatang.zip');
+}
+
 /**
  *
  * @param command {string
@@ -171,13 +197,17 @@ async function check() {
  *   cwd?: string;
  *   silent?: boolean;
  *   requireValue?: boolean;
+ *   throwError?: boolean;
  * }}}
  *
  * @returns {Promise<{ error: unknown; stdout: string, stderr: string }>}
  */
-function $(command, { cwd, stdin, silent = false, requireValue = false } = {}) {
+function $(
+  command,
+  { cwd, stdin, silent = false, requireValue = false, throwError = false } = {},
+) {
   if (!silent) log(command, '$');
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const process = exec(
       command,
       {
@@ -185,7 +215,13 @@ function $(command, { cwd, stdin, silent = false, requireValue = false } = {}) {
         stdio: requireValue ? 'pipe' : silent ? 'ignore' : 'inherit',
         encoding: 'utf-8',
       },
-      (error, stdout, stderr) => resolve({ error, stdout, stderr }),
+      (error, stdout, stderr) => {
+        if (throwError && error) {
+          reject(error);
+        } else {
+          resolve({ error, stdout, stderr });
+        }
+      },
     );
     if (stdin != null) {
       process.stdin.write(stdin);
