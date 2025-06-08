@@ -3,11 +3,14 @@ Napkin Solutions
 This repository serves solutions for the problems from the book, [An Infinitely Large Napkin](https://web.evanchen.cc/napkin.html) by Evan Chen and contributors.
 
 ```bash
+cd www
+
 # Node.js 22+ and typst 0.13 are required
 
-./x build
-npx serve dist
-# See http://localhost:3000
+# Install dependencies
+pnpm i
+# Run the development server, see http://localhost:3000
+pnpm dev
 ```
 
 ### Contribution
