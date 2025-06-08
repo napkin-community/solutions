@@ -1,258 +1,181 @@
-#!/usr/bin/env node
-import process from 'node:process';
-import { parseArgs } from 'node:util';
-import { exec } from 'node:child_process';
-import { Readable } from 'node:stream';
-import { finished } from 'node:stream/promises';
-import { createWriteStream } from 'node:fs';
-import fs from 'node:fs/promises';
-import path from 'node:path';
+#!/bin/bash
+set -euo pipefail; IFS=$'\n\t'
 
-/**
- * @type {{
- *   values: {
- *      version: boolean;
- *      help: boolean;
- *   };
- *   positionals: string[];
- * }}
- */
-const { values, positionals } = parseArgs({
-  options: {
-    version: { type: 'boolean', short: 'v' },
-    help: { type: 'boolean', short: 'h' },
-  },
-  allowPositionals: true,
-});
+# Change to the directory of the script
+cd "${0%/*}"
 
-if (values.help) {
-  showHelpThenExit();
-}
-if (values.version) {
-  console.log('./x 0.1.0-SNAPSHOT.1');
-  process.exit(0);
-}
+# Function to display help message and exit
+#
+# Usage: show_help_then_exit [exit_code]
+show_help_then_exit() {
+  cat <<EOF
+${0} - Napkin Utilities
 
-switch (positionals[0]) {
-  default:
-    log(`Unknown command: ./x ${positionals[0]}`, '!');
-    console.log();
-  case undefined:
-  case 'help':
-    showHelpThenExit();
-  case 'register':
-    await register(positionals[1]);
-    break;
-  case 'check':
-    await check();
-  case 'prepare-fonts':
-    await prepareFonts();
-    break;
-}
-
-function showHelpThenExit(code = 0) {
-  console.log(`\
-./x - Napkin Utilities
-Usage: ./x [-v | --version] [-h | --help]
-           <command> [<args>]
+Usage:
+  ${0} [<command>] [<args>]
+  ${0} [-h | --help]
 
   register <github-handle>      Fetch GitHub profile from handle and download
                                 the profile to register it to users
   check                         Check whether the typst source file valid
   prepare-fonts                 Prepare fonts for Typst
-`);
-  process.exit(code);
+  -h, --help                    Display this help message
+EOF
+  exit "${1:-0}"
 }
 
-async function register(handle) {
-  if (handle == null) {
-    log(`Handle is not supplied to the register command`, '!');
-    console.log();
-    showHelpThenExit(1);
-  }
-  log(`Fetch \x1B[4m${handle}\x1B[0m from GitHub...`);
-  const resp = await fetch(`https://api.github.com/users/${handle}`);
-  const payload = await resp.json();
+# Parse command line arguments
+if (( $# < 1)); then
+  show_help_then_exit 1
+fi
+case "${1}" in
+  #
+  # Register a user by fetching GitHub profile
+  #
+  register)
+    #
+    # Parse ARGV[2]
+    #
+    if (( $# != 2)); then
+      echo "Usage: ${0} register <github-handle>"
+      exit 1
+    fi
+    USERNAME="${2}"
 
-  const targetDir = `users/`;
-  await fs.mkdir(targetDir, { recursive: true });
-  const avatarMime = (await fetch(payload.avatar_url)).headers.get(
-    'Content-Type',
-  );
-  const avatarFormat = avatarMime.replace(/^image\//, '');
-  const avatarFilename = `${handle.toLowerCase()}.${avatarFormat}`;
+    #
+    # Check if dependencies are installed
+    #
+    if ! which -s curl jq perl; then
+      echo "Error: Please install 'curl', 'jq', and 'perl'"
+      exit 1
+    fi
 
-  const avatar = await fetch(payload.avatar_url);
-  const file = createWriteStream(path.join(targetDir, avatarFilename));
-  await finished(Readable.fromWeb(avatar.body).pipe(file));
+    #
+    # Fetch profile
+    #
+    echo "Fetching GitHub profile of ${USERNAME} ..."
+    PAYLOAD=$(curl "https://api.github.com/users/${USERNAME}")
 
-  await fs.writeFile(
-    path.join(targetDir, `${handle.toLowerCase()}.json`),
-    JSON.stringify(
+    #
+    # Download the avatar
+    #
+    curl -o "users/${USERNAME}.avatar" -D "users/${USERNAME}.avatar.headers" "$(jq -r '.avatar_url' <<< "${PAYLOAD}")"
+    # Extract the MIME
+    AVATAR_MIME=$(perl -ne 'print if s/content-type: image\/([a-z]*)\r$/\1/i' "users/${USERNAME}.avatar.headers")
+    rm "users/${USERNAME}.avatar.headers"
+    mv "users/${USERNAME}.avatar" "users/${USERNAME}.${AVATAR_MIME}"
+    echo "Downloaded 'users/${USERNAME}.${AVATAR_MIME}'"
+
+    #
+    # Save JSON
+    #
+    <<< "{\"a\":${PAYLOAD},\"b\":\"${AVATAR_MIME}\"}" jq '
       {
-        login: payload.login,
-        name: payload.name,
+        login: .a.login,
+        name: .a.name,
         avatar: {
-          path: path.posix.relative(
-            `template`,
-            path.posix.join(targetDir, avatarFilename),
-          ),
-          format: avatarFormat,
+          path: "../users/\(.a.login).\(.b)",
+          format: .b
         },
         social: {
-          github: `https://github.com/${payload.login}`,
-          twitter: payload.twitter_username
-            ? `https://twitter.com/${payload.twitter_username}`
-            : null,
-        },
-      },
-      null,
-      2,
-    ) + '\n',
-    { encoding: 'utf-8' },
-  );
-  log(`Successfully wrote metadata for \x1B[4m${payload.login}\x1B[0m`);
-  log(`Update \x1B[4mtemplate/napkin-users.typ\x1B[0m...`);
-
-  const wholeUsers = (await fs.readdir(targetDir))
-    .flatMap(
-      (x) =>
-        x.match(
-          /^([a-zA-Z\d](?:[a-zA-Z\d]|-(?=[a-zA-Z\d])){0,38})\.json$/,
-        )?.[1] ?? [],
-    )
-    .toSorted((a, b) => a.localeCompare(b));
-  await fs.writeFile(
-    `template/napkin-users.typ`,
-    dedent(`
-    | #let users = (
-    ${wholeUsers
-      .map((user) =>
-        [
-          `|   "${user}": {`,
-          `|     let metadata = json("../users/${user}.json")`,
-          `|     let avatar = read(metadata.avatar.path, encoding: none)`,
-          `|     (..metadata, avatar: (source: avatar, format: metadata.avatar.format))`,
-          `|   },`,
-        ].join('\n'),
-      )
-      .join('\n')}
-    | )
-    `),
-    { encoding: 'utf-8' },
-  );
-}
-
-async function check() {
-  // install
-  const { error } = await $(`typst compile - - > /dev/null`, {
-    stdin: `
-      #import "@preview/fletcher:0.5.7"
-    `,
-  });
-  if (error) throw error;
-  // build
-  const files = (await fs.readdir('.')).filter((x) => x.match(/.typ$/));
-  log(`Checking ${files.length} files...`);
-  let counter = 0;
-  await Promise.all(
-    files.map(async (file) => {
-      const result = await $(`typst compile ${file} - > /dev/null`);
-      if (result.error) {
-        throw result.error;
-      }
-      counter += 1;
-      log(`[${counter}/${files.length}] ${file}`, 'check');
-    }),
-  );
-}
-
-async function prepareFonts() {
-  await $(
-    `
-      curl -L -o latin-modern.zip \\
-        'https://www.gust.org.pl/projects/e-foundry/latin-modern/download/lm2.004otf.zip'
-    `.trim(),
-    { throwError: true },
-  );
-  await $(`unzip -f latin-modern.zip -d fonts`, { throwError: true });
-  await $(
-    `
-      curl -L -o Bareonbatang.zip \\
-        --referer 'https://copyright.keris.or.kr/wft/fntDwnldView' \\
-        -d 'fntGrpId=GFT202301120000000000002&fntFileId=FTF202312080000000000070' \\
-        'https://copyright.keris.or.kr/cmm/fntDwnldById';
-    `.trim(),
-    { throwError: true },
-  );
-  await $(`unzip -f Bareonbatang.zip '*.otf' -d fonts`, { throwError: true });
-  await fs.unlink('latin-modern.zip');
-  await fs.unlink('Bareonbatang.zip');
-}
-
-/**
- *
- * @param command {string
- * @param options {{
- *   cwd?: string;
- *   silent?: boolean;
- *   requireValue?: boolean;
- *   throwError?: boolean;
- * }}}
- *
- * @returns {Promise<{ error: unknown; stdout: string, stderr: string }>}
- */
-function $(
-  command,
-  { cwd, stdin, silent = false, requireValue = false, throwError = false } = {},
-) {
-  if (!silent) log(command, '$');
-  return new Promise((resolve, reject) => {
-    const process = exec(
-      command,
-      {
-        cwd,
-        stdio: requireValue ? 'pipe' : silent ? 'ignore' : 'inherit',
-        encoding: 'utf-8',
-      },
-      (error, stdout, stderr) => {
-        if (throwError && error) {
-          reject(error);
-        } else {
-          resolve({ error, stdout, stderr });
+          github: .a.html_url,
+          twitter: (if .a.twitter_username == null then null else "https://twitter.com/\(.a.twitter_username)" end)
         }
-      },
-    );
-    if (stdin != null) {
-      process.stdin.write(stdin);
-      process.stdin.end();
-    }
-  });
-}
+      }
+    ' > "users/${USERNAME}.json"
+    echo "Downloaded 'users/${USERNAME}.json'"
 
-/**
- *
- * @param string {string}
- * @param level {string}
- * @returns {undefined}
- */
-function log(string, level = 'i') {
-  const prefix =
-    { $: `\x1B[33m[$]\x1B[0m`, '!': `\x1B[31m[i]\x1B[0m`, check: '✅' }[
-      level
-    ] ?? `\x1B[34m[${level}]\x1B[0m`;
-  console.log(`    ${prefix}    ${string}`);
-}
+    #
+    # Update template/napkin-users.typ
+    #
+    ls users/*.json |
+      perl -ne 'print if s/^users\/([a-z]+)\.json$/\1/' |
+      sort |
+      perl -e '
+use strict;
+use warnings;
 
-/**
- *
- * @param string {string}
- * @returns {string}
- */
-function dedent(string) {
-  return string
-    .trim()
-    .split('\n')
-    .map((x) => x.trimStart().replace(/^\|(?: |$)/, '') + '\n')
-    .join('');
+print "#let users = (\n";
+while (my $user = <STDIN>) {
+  chomp $user;
+  print <<"END";
+  "$user": {
+    let metadata = json("../users/$user.json")
+    let avatar = read(metadata.avatar.path, encoding: none)
+    (..metadata, avatar: (source: avatar, format: metadata.avatar.format))
+  },\
+END
 }
+print ")\n";
+    ' > template/napkin-users.typ
+
+    echo -e "✅ \x1b[1;92mSuccessfully fetched '${USERNAME}'!\x1b[0m"
+    exit 0;;
+
+
+  #
+  # Check whether the typst source file valid
+  #
+  check)
+    # Check if dependencies are installed
+    if ! which -s typst find xargs; then
+      echo "Error: Please install 'typst', 'find', and 'xargs'"
+      exit 1
+    fi
+
+    # Fetch dependencies (fletcher, cetz, etc.)
+    typst compile - - > /dev/null <<< '#import "@preview/fletcher:0.5.7"'
+    # Parallel build
+    find . -maxdepth 1 -name '*.typ' -print0 |
+      xargs -0 -P0 -I{} bash -c 'echo "Checking {} ..." && typst compile -f pdf "{}" /dev/null' || {
+        echo "Typst source file is invalid."
+        exit 1
+      }
+
+    echo -e "✅ \x1b[1;92mAll typst source files are valid!\x1b[0m"
+    exit 0;;
+
+
+  #
+  # Prepare fonts for Typst
+  #
+  prepare-fonts)
+    # Check if dependencies are installed
+    if ! which -s curl b2sum unzip; then
+      echo "Error: Please install 'curl', 'b2sum', and 'unzip'"
+      exit 1
+    fi
+
+    mkdir -p ./fonts
+    # Download then verify zips
+    curl -Lo ./fonts/latin-modern.zip --skip-existing \
+      'https://www.gust.org.pl/projects/e-foundry/latin-modern/download/lm2.004otf.zip'
+    curl -Lo ./fonts/bareon-batang.zip --skip-existing \
+      --referer 'https://copyright.keris.or.kr/wft/fntDwnldView' \
+      -d 'fntGrpId=GFT202301120000000000002&fntFileId=FTF202312080000000000070' \
+      'https://copyright.keris.or.kr/cmm/fntDwnldById'
+    b2sum --quiet -c <<'EOF'
+87472bdd53899c1dfec8f4b8491fabc7878b1f8c1e72424ae0edf79c7f22fd873f6c3e650d3201dfa4481185dffa5960202919a621fd056947540d215eb20bec fonts/bareon-batang.zip
+448233fb23437a08997d8cb6d2600709223ce8dc2fbce949652b47071450a7a0a0915bcfa59bb88b5e52e5fdb6021c93c38891fa05f106fa299a61bd3cbefd5e fonts/latin-modern.zip
+EOF
+    # Unzip
+    unzip -qo ./fonts/latin-modern.zip -d ./fonts
+    unzip -qo ./fonts/bareon-batang.zip '*.otf' -d ./fonts
+
+    echo -e "✅ \x1b[1;92mFonts are prepared!\x1b[0m"
+    exit 0;;
+
+
+  #
+  # Show help message and exit
+  #
+  -h|--help)
+    show_help_then_exit;;
+
+
+  #
+  # Show help message and exit if the command is not recognized
+  #
+  *)
+    show_help_then_exit 1;;
+esac
