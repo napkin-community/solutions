@@ -148,12 +148,16 @@ print ")\n";
 
     mkdir -p ./fonts
     # Download then verify zips
-    curl -Lo ./fonts/latin-modern.zip --skip-existing \
-      'https://www.gust.org.pl/projects/e-foundry/latin-modern/download/lm2.004otf.zip'
-    curl -Lo ./fonts/bareon-batang.zip --skip-existing \
-      --referer 'https://copyright.keris.or.kr/wft/fntDwnldView' \
-      -d 'fntGrpId=GFT202301120000000000002&fntFileId=FTF202312080000000000070' \
-      'https://copyright.keris.or.kr/cmm/fntDwnldById'
+    if [[ ! -f ./fonts/latin-modern.zip ]]; then
+      curl -Lo ./fonts/latin-modern.zip \
+        'https://www.gust.org.pl/projects/e-foundry/latin-modern/download/lm2.004otf.zip'
+    fi
+    if [[ ! -f ./fonts/bareon-batang.zip ]]; then
+      curl -Lo ./fonts/bareon-batang.zip \
+        --referer 'https://copyright.keris.or.kr/wft/fntDwnldView' \
+        -d 'fntGrpId=GFT202301120000000000002&fntFileId=FTF202312080000000000070' \
+        'https://copyright.keris.or.kr/cmm/fntDwnldById'
+    fi
     b2sum --quiet -c <<'EOF'
 87472bdd53899c1dfec8f4b8491fabc7878b1f8c1e72424ae0edf79c7f22fd873f6c3e650d3201dfa4481185dffa5960202919a621fd056947540d215eb20bec fonts/bareon-batang.zip
 448233fb23437a08997d8cb6d2600709223ce8dc2fbce949652b47071450a7a0a0915bcfa59bb88b5e52e5fdb6021c93c38891fa05f106fa299a61bd3cbefd5e fonts/latin-modern.zip
