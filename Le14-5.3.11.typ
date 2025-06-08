@@ -25,7 +25,11 @@
 
     Since $phi_X$ is a group homomorphism, $phi_X (l_1 dot_L' l_2) = phi_X (l_1) dot_(F(X)) phi_X (l_2)$
 
-    Thus, $l_1 dot_(L') l_2 = (phi_X (l_1) dot_(F(X)) phi_X (l_2))_(X in J)$, which is closed in $L$. This makes the unique group $L'$, and it can be verified that $L'$ is a group and each of $phi$ is a morphism in $bold("Grp")$ indeed. Moreover, $(L', phi)$ is a cone in $bold("Grp")$ (trivial since $(L, phi)$ is a cone in $bold("Set")$).
+    Thus, $l_1 dot_(L') l_2 = (phi_X (l_1) dot_(F(X)) phi_X (l_2))_(X in J)$, which is closed in $L$ since for all $f : X -> Y$ in $J$, $U(f)(phi_X (l_1 dot_(L') l_2))=U(f)(phi_X (l_1) dot_(F(X)) phi_X (l_2))=U(f)(phi_X (l_1)) dot_(F(Y)) U(f)(phi_X (l_2))=phi_Y (l_1) dot_(F(Y)) phi_Y (l_2)=phi_Y (l_1 dot_(L') l_2)$ satisfying the condition for inclusion in $L$.)
+
+    Similarly, it can be shown that the inverse is closed in $L'$.
+
+    This makes the unique group $L'$, and it can be verified that $L'$ is a group and each of $phi$ is a morphism in $bold("Grp")$ indeed. Moreover, $(L', phi)$ is a cone in $bold("Grp")$ (trivial since $(L, phi)$ is a cone in $bold("Set")$).
 
     === $(L', phi')$ is a limit cone.
 
