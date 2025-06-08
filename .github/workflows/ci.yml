@@ -6,16 +6,33 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-24.04
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
     permissions:
       contents: read
       pages: write
       id-token: write
+
     steps:
       - uses: actions/checkout@v4
+
+      # setup typst
+      - uses: typst-community/setup-typst@v4
+        with:
+          typst-version: ^0.13.0
+
+      # setup fonts
+      - id: cache-fonts
+        uses: actions/cache@v4
+        with:
+          path: fonts
+          key: ${{ runner.os }}-fonts-1
+
+      # setup node & pnpm
       - uses: pnpm/action-setup@v4
         with:
           run_install: false
@@ -25,21 +42,16 @@ jobs:
           node-version: 22
           cache: pnpm
           cache-dependency-path: www/pnpm-lock.yaml
-      - uses: typst-community/setup-typst@v4
-        with:
-          typst-version: ^0.13.0
-      # Fonts not installed with typst
-      - id: cache-fonts
-        uses: actions/cache@v4
-        with:
-          path: fonts
-          key: ${{ runner.os }}-fonts-1
+
+      # build
       - run: |
           ./x prepare-fonts
 
           cd www
           pnpm i
           pnpm build
+
+      # deploy to GitHub Pages
       - uses: actions/upload-pages-artifact@v3
         with:
           path: www/dist

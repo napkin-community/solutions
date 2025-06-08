@@ -1,11 +1,18 @@
 name: check
-on: [pull_request]
+on: [push, pull_request]
 
 jobs:
   check:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+
+      # setup typst
+      - uses: typst-community/setup-typst@v4
+        with:
+          typst-version: ^0.13.0
+
+      # setup typstyle
       - id: cache-typstyle
         uses: actions/cache@v4
         with:
@@ -15,13 +22,18 @@ jobs:
         run: |
           curl -L -o typstyle https://github.com/Enter-tainer/typstyle/releases/download/v0.13.9/typstyle-x86_64-unknown-linux-gnu && \
           chmod +x typstyle
-      - run: ./typstyle --check .
-      - uses: actions/setup-node@v4
+
+      # setup fonts
+      - id: cache-fonts
+        uses: actions/cache@v4
         with:
-          node-version: 22
-      - uses: typst-community/setup-typst@v4
-        with:
-          typst-version: ^0.13.0
-      - run: ./x check
-        env:
+          path: fonts
+          key: ${{ runner.os }}-fonts-1
+
+      # check
+      - env:
           TYPST_FONT_PATHS: ./fonts
+        run: |
+          ./x prepare-fonts
+          ./typstyle --check .
+          ./x check
