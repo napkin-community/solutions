@@ -183,28 +183,27 @@ EOF
     FILENAME="${2}"
 
     # Check if dependencies are installed
-    if ! which -s typst magick; then
-      echo "Error: Please install 'typst', and 'magick'"
+    if ! which -s typst; then
+      echo "Error: Please install 'typst'"
       exit 1
     fi
 
-    # Render into PNG
-    ENCODED_PNG=$(
+    # Render into SVG
+    SVG=$(
       cat - "${FILENAME}" <<< "#set page(margin: (left: 6em, right: 6em, top: 2em, bottom: 2em), height: auto)" |
-        typst compile --font-path fonts -f svg - - |
-        magick svg:- png:- |
-        base64
+        typst compile --font-path fonts -f svg - -
     )
 
     if command -v osascript >/dev/null; then
       # On macOS
-      base64 -d <<< "${ENCODED_PNG}" > .tmp.png
+      cat <<< "${SVG}" > ./.tmp.svg
+      /usr/bin/sips -s format png -o .tmp.png .tmp.svg
       osascript \
         -e 'on run args' \
         -e 'set the clipboard to (read (POSIX file (first item of args)) as picture)' \
         -e 'end' \
         ./.tmp.png
-      rm ./.tmp.png
+      rm ./.tmp.svg ./.tmp.png
       exit 0
     else
       # On Linux
@@ -216,7 +215,7 @@ EOF
         echo "Error: Please install 'xcopy', or 'wl-copy' to copy the image to clipboard"
         exit 1
       fi
-      base64 -d <<< "${ENCODED_PNG}" | "${COPY}"
+      <<< "${SVG}" | magick svg:- png:- | "${COPY}"
     fi
     exit 0;;
 
