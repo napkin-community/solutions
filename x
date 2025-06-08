@@ -56,6 +56,7 @@ Usage: ./x [-v | --version] [-h | --help]
 
   register <github-handle>      Fetch GitHub profile from handle and download
                                 the profile to register it to users
+  check                         Check whether the typst source file valid
 `);
   process.exit(code);
 }
