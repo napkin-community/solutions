@@ -35,7 +35,9 @@ const content = await getChapterContents(chapter);
       <h2 id={id}>{display}  <a class="go-to-top" href="#top">Go To Top</a></h2>
       <Typst code={`
         #set page(
-          margin: (left: 6em, right: 6em, top: 0em, bottom: 0em),
+          margin: (left: 5em, right: 5em, top: 0em, bottom: 0em),
+          // require 5em left because of chili
+          width: 595.27pt + 5em,
           height: auto,
         )
         ${body}  
