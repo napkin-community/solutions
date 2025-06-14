@@ -183,7 +183,7 @@ EOF
     FILENAME="${2}"
 
     # Check if dependencies are installed
-    if ! which -s typst; then
+    if ! command -v typst >/dev/null; then
       echo "Error: Please install 'typst'"
       exit 1
     fi
@@ -208,14 +208,14 @@ EOF
     else
       # On Linux
       if command -v wl-copy >/dev/null; then
-        COPY=pbcopy
+        COPY=wl-copy
       elif command -v xcopy >/dev/null; then
         COPY=xcopy
       else
         echo "Error: Please install 'xcopy', or 'wl-copy' to copy the image to clipboard"
         exit 1
       fi
-      <<< "${SVG}" | magick svg:- png:- | "${COPY}"
+      <<< "${SVG}" magick svg:- png:- | "${COPY}"
     fi
     exit 0;;
 
