@@ -51,13 +51,13 @@
       )
 
       $
-        forall b in B \
-        quad f(g(b)) & = f(h(b)) \
-        f(g(b)) + f(h(b))^(-1) & = 0_X \
-        f(g(b)) +f(h(b)^(-1)) & = 0_X \
-        f(g(b) + h(b)^(-1)) & = 0_X \
-        g(b) + h(b)^(-1) & = 0_X "(assume" f "is injective)" \
-        g(b) & = h(b) \
+                 forall b in B                                     \
+                  quad f(g(b)) & = f(h(b))                         \
+        f(g(b)) + f(h(b))^(-1) & = 0_X                             \
+         f(g(b)) +f(h(b)^(-1)) & = 0_X                             \
+           f(g(b) + h(b)^(-1)) & = 0_X                             \
+              g(b) + h(b)^(-1) & = 0_X "(assume" f "is injective)" \
+                          g(b) & = h(b)                            \
       $
 
       Therefore, $f compose g = f compose h ==> g = h$
