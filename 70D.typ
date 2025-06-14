@@ -12,14 +12,14 @@
 
   #set par(first-line-indent: 1em)
 
-  - the objects are pairs of abelian groups $(B, A)$ where $A$ is subgroup of $B$.
+  - the objects are pairs of abelian groups $(B, A)$ where $A$ is a subgroup of $B$.
   - the morphisms $(B, A) -> (B prime, A prime)$ are maps $f : B -> B prime$ where $f^"img" (A) subset.eq A prime$.
 
   (You can think of this similar to the $sans("PairTop")$ category, seen in Chapter 73. We use abelian groups here to make the category additive.)
 
-  This category can be equivalently viewed as the category of short exact sequences $0 -> A -> B -> B slash A -> 0$ of abelian groups.
+  This category can be equivalently viewed as the category of short exact sequences #box[$0 -> A -> B -> B slash A -> 0$] of abelian groups.
 
-  Show that the arrow $(X, 0) -> (X, X)$ is monic and epic, but not an isomorphism. Conclude that the category is not abelian.
+  Show that the arrow $(X, 0) -> (X, X)$ is monic and epic, but not an isomorphism. #box[Conclude that the category is not abelian].
 ]
 
 
@@ -30,6 +30,8 @@
   Experts should not say "natural", "common practice", "obvious", or similar to learners.
 
   Even in the "naturality", we can think both $id_X$ and the zero map for "the arrow". Thanks to god, it is not "an arrow". If so, since it's abelian, we may think $x |-> 2x$ or similar maps.
+
+  I have no respect for this problem.
 
   #enum[
     *The arrow $f$ is monic and epic.*
@@ -49,13 +51,13 @@
       )
 
       $
-                 forall b in B                                     \
-                  quad f(g(b)) & = f(h(b))                         \
-        f(g(b)) + f(h(b))^(-1) & = 0_X                             \
-         f(g(b)) +f(h(b)^(-1)) & = 0_X                             \
-           f(g(b) + h(b)^(-1)) & = 0_X                             \
-              g(b) + h(b)^(-1) & = 0_X "(assume" f "is injective)" \
-                          g(b) & = h(b)                            \
+        forall b in B \
+        quad f(g(b)) & = f(h(b)) \
+        f(g(b)) + f(h(b))^(-1) & = 0_X \
+        f(g(b)) +f(h(b)^(-1)) & = 0_X \
+        f(g(b) + h(b)^(-1)) & = 0_X \
+        g(b) + h(b)^(-1) & = 0_X "(assume" f "is injective)" \
+        g(b) & = h(b) \
       $
 
       Therefore, $f compose g = f compose h ==> g = h$
