@@ -17,9 +17,9 @@ const { chapter } = Astro.params;
 const content = await getChapterContents(chapter);
 ---
 
-<Layout title={`@napkin-community/solutions > ${getChapterName(chapter)}`}>
+<Layout title={`napkin solutions > ${getChapterName(chapter)}`}>
   <div id="top"/>
-  <a href=".">Back to Chapter Selection</a>
+  <a href="..">Back to Chapter Selection</a>
   <h2>Table of Contents</h2>
   <ol>
     {
@@ -32,7 +32,7 @@ const content = await getChapterContents(chapter);
   </ol>
   {
     content.map(({ id, display, body }) => (
-      <h2 id={id}>{display}  <a class="go-to-top" href="#top">Go To Top</a></h2>
+      <h2 id={id}>{display}  <a class="anchor" href={`#${id}`}>#</a></h2>
       <Typst code={`
         #set page(
           margin: (left: 5em, right: 5em, top: 0em, bottom: 0em),
@@ -53,7 +53,7 @@ const content = await getChapterContents(chapter);
   :global(svg) {
     max-width: 80em;
   }
-  a.go-to-top {
+  a.anchor {
     vertical-align: super;
     font-size: 0.75em;
   }

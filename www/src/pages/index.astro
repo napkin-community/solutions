@@ -5,12 +5,12 @@ import { getChapterName, getChapters } from '../lib/chapter';
 const chapters = await getChapters();
 ---
 
-<Layout title="@napkin-community/solutions">
+<Layout title="napkin solutions">
   <ol>
     {
       chapters.map((chapter) => (
         <li>
-          <a href={`./${chapter.id}`}>{getChapterName(chapter.id)}</a>
+          <a href={`./${chapter.id}/`}>{getChapterName(chapter.id)}</a>
         </li>
       ))
     }
@@ -19,28 +19,25 @@ const chapters = await getChapters();
 
 <style>
   ol {
-    list-style: none;
-    width: calc(100svw - 2 * 2rem);
-    padding: 2rem;
     display: grid;
+    padding: 2rem;
     gap: 2rem;
     grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+    list-style: none;
   }
   li {
     aspect-ratio: 3 / 4;
     border: 2px solid black;
     border-radius: 0.25rem;
-    font-size: 2rem;
+
+    display: grid;
   }
   li > a {
-    width: calc(100% - 2 * 1rem);
-    height: calc(100% - 2 * 1rem);
+    display: grid;
     padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: end;
-    justify-content: end;
-    text-decoration: none;
+    place-items: end;
+
+    font-size: 1.5rem;
     color: unset;
   }
 </style>
