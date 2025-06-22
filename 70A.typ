@@ -5,27 +5,33 @@
 #plain_box(title: [Problem 70A], subtitle: [Four lemma])[
   In an abelian category, consider the commutative diagram
 
-  #diagram(
-    node((0, 0), $A$),
-    edge("r", $p$, "->"),
-    edge("d", $alpha$, "-|>"),
-    edge((0, 0), (0, 0.72), $$, "-|>"),
-    node((1, 0), $B$),
-    edge("r", $q$, "->"),
-    edge("d", $beta$, "hook->"),
-    node((2, 0), $C$),
-    edge("r", $r$, "->"),
-    edge("d", $gamma$, "->"),
-    node((3, 0), $D$),
-    edge("d", $delta$, "hook->"),
-    node((0, 1), $A'$),
-    edge("r", $p'$, "->"),
-    node((1, 1), $B'$),
-    edge("r", $q'$, "->"),
-    node((2, 1), $C'$),
-    edge("r", $r'$, "->"),
-    node((3, 1), $D'$),
-  )
+  #diagram(label-sep: 0em, {
+    let (a, b, c, d) = ((0, 0), (1, 0), (2, 0), (3, 0))
+    let (a_, b_, c_, d_) = ((0, 1), (1, 1), (2, 1), (3, 1))
+
+    node(a, $A$)
+    node(b, $B$)
+    node(c, $C$)
+    node(d, $D$)
+
+    node(a_, $A'$)
+    node(b_, $B'$)
+    node(c_, $C'$)
+    node(d_, $D'$)
+
+    edge(a, b, $p$, "-|>")
+    edge(b, c, $q$, "-|>")
+    edge(c, d, $r$, "-|>")
+
+    edge(a_, b_, $p'$, "-|>", label-side: right)
+    edge(b_, c_, $q'$, "-|>", label-side: right)
+    edge(c_, d_, $r'$, "-|>", label-side: right)
+
+    edge(a, a_, $a$, marks: (none, (inherit: "|>", extrude: (0, -8))))
+    edge(b, b_, $β$, "hook-|>")
+    edge(c, c_, $γ$, "-|>")
+    edge(d, d_, $δ$, "hook-|>")
+  })
 
   where the first and second rows are exact. Prove that if $alpha$ is epic, and $beta$ and $delta$ are monic, then $gamma$ is monic.
 ]
