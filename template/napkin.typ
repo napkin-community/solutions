@@ -348,7 +348,7 @@
       #titlize([Solution], subtitle)
       #if subtitle != none {
         linebreak()
-      } else { }
+      } else {}
       _by_ #box(baseline: 20%, radius: 2pt, clip: true)[#image(by.avatar.source, format: by.avatar.format, height: 1.2em)] #if by.name != by.login {
         [#by.name (#by.login)]
       } else { [#by.name] }
