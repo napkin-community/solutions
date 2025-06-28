@@ -13,7 +13,7 @@
   $T$ has $2 times 2$ Jordan form, which can contain (1) two $1 times 1$ Jordan blocks, or (2) one $2 times 2$ Jordan block.
 
   #enum(numbering: "(1)", spacing: 1em)[
-    Jordan form is $J = mat(lambda, 0; 0, lambda)$, which is trivially diagonalizable.
+    Jordan form is $J = mat(lambda_1, 0; 0, lambda_2)$, which is trivially diagonalizable.
   ][
     Jordan form is $J = mat(lambda, 1; 0, lambda)$, then
     $
