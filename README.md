@@ -14,15 +14,13 @@ pnpm dev
 ```
 
 ### Contribution
-
-To match Napkin's style, some fonts are required:
+`pnpm i` will automatically install following fonts to the `fonts/` directory:
 
 - [Latin Modern Sans](https://www.gust.org.pl/projects/e-foundry/latin-modern) - For `#blue_box`.
 - [Hakgyoansim Bareonbatang](https://copyright.keris.or.kr/wft/fntDwnldView?fntGrpId=GFT202301120000000000002) - For Korean support.
 
-You'd better have the following tools for a better contribution experience
+Following tools are recommended for a better contribution experience:
 
-- [Visual Studio Code](https://code.visualstudio.com/) - General purpose editor.
 - [Espanso](https://espanso.org/) - Write mathematics symbols outside Typst.
 - [Typsi](https://github.com/RanolP/typsi) - If you like typst-y symbol names, use this espanso package.
 
