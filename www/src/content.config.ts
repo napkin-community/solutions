@@ -15,11 +15,18 @@ const exercises = defineCollection({
   }),
 });
 
-const respect = defineCollection({
+const le14 = defineCollection({
   loader: glob({
     base: '../',
     pattern: 'Le14-+([.0-9]).typ',
   }),
 });
 
-export const collections = { aFewHarderProblems, exercises, respect };
+const hatcher = defineCollection({
+  loader: glob({
+    base: '../',
+    pattern: 'Hatcher-+([.0-9]).typ',
+  }),
+});
+
+export const collections = { aFewHarderProblems, exercises, le14, hatcher };

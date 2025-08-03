@@ -6,7 +6,6 @@ import { readMetadata } from './typst';
 export async function getChapters() {
   const exercises = await getCollection('exercises');
   const aFewHarderProblems = await getCollection('aFewHarderProblems');
-  const respect = await getCollection('respect');
 
   return uniqBy(
     [
@@ -28,7 +27,8 @@ export async function getChapters() {
           order: chapterId,
         };
       }),
-      ...(respect.length > 0 ? [{ id: 'Le14', order: 69 }] : []),
+      { id: 'Le14', order: 69 },
+      { id: 'Hatcher', order: 72 },
     ],
     (chap) => chap.order,
   ).toSorted((a, b) => a.order - b.order);
@@ -37,6 +37,8 @@ export async function getChapters() {
 export function getChapterName(id: number | string) {
   if (id === 'Le14') {
     return 'Le14';
+  } else if (id === 'Hatcher') {
+    return 'Hatcher';
   } else {
     return `Ch. ${id}`;
   }
@@ -44,7 +46,7 @@ export function getChapterName(id: number | string) {
 
 export async function getChapterContents(id: number | string) {
   if (id === 'Le14') {
-    const respect = await getCollection('respect');
+    const respect = await getCollection('le14');
     return respect.map((content) => ({
       ...content,
       id: path
@@ -54,6 +56,20 @@ export async function getChapterContents(id: number | string) {
       display: path.parse(content.filePath).name.replace(/^Le14-/, ''),
     }));
   }
+
+  if (id === 'Hatcher') {
+    const hatcher = await getCollection('hatcher');
+    return hatcher.map((content) => ({
+      ...content,
+      id: path
+        .parse(content.filePath)
+        .name.replace(/^Hatcher-/, '')
+        .replaceAll(/\./g, '-'),
+      display: path.parse(content.filePath).name.replace(/^Hatcher-/, ''),
+    }));
+  }
+
+
   const exercises = await getCollection('exercises');
   const aFewHarderProblems = await getCollection('aFewHarderProblems');
 
