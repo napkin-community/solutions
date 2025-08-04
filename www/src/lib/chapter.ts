@@ -2,6 +2,7 @@ import { getCollection } from 'astro:content';
 import { uniqBy } from 'es-toolkit';
 import path from 'node:path';
 import { readMetadata } from './typst';
+import { naturalCompare } from './numberCompare';
 
 export async function getChapters() {
   const exercises = await getCollection('exercises');
@@ -54,7 +55,7 @@ export async function getChapterContents(id: number | string) {
         .name.replace(/^Le14-/, '')
         .replaceAll(/\./g, '-'),
       display: path.parse(content.filePath).name.replace(/^Le14-/, ''),
-    }));
+    })).toSorted(({ id: a }, { id: b }) => naturalCompare(a, b));
   }
 
   if (id === 'Hatcher') {
@@ -66,7 +67,7 @@ export async function getChapterContents(id: number | string) {
         .name.replace(/^Hatcher-/, '')
         .replaceAll(/\./g, '-'),
       display: path.parse(content.filePath).name.replace(/^Hatcher-/, ''),
-    }));
+    })).toSorted(({ id: a }, { id: b }) => naturalCompare(a, b));
   }
 
 
@@ -87,17 +88,7 @@ export async function getChapterContents(id: number | string) {
       )[1];
       return id.toString() === chapterId && !metadata.skipFromBuild;
     })
-    .toSorted(({ filePath: a }, { filePath: b }) => {
-      const aSegments = a.split('.').slice(0, -1);
-      const bSegments = b.split('.').slice(0, -1);
-
-      for (let i = 0; i < Math.min(aSegments.length, bSegments.length); i++) {
-        if (aSegments[i] !== bSegments[i]) {
-          return aSegments[i] - bSegments[i];
-        }
-      }
-      return 0;
-    });
+    .toSorted(({ filePath: a }, { filePath: b }) => naturalCompare(a, b));
   const problemsOrdered = aFewHarderProblems
     .filter(({ filePath }) => {
       const chapterId = /([0-9]+)[a-zA-Z]+\.typ/.exec(
@@ -106,9 +97,7 @@ export async function getChapterContents(id: number | string) {
 
       return id.toString() === chapterId;
     })
-    .toSorted(({ filePath: a }, { filePath: b }) => {
-      return a.localeCompare(b);
-    });
+    .toSorted(({ filePath: a }, { filePath: b }) => naturalCompare(a, b));
 
   return [
     ...exercisesOrdered.map((content) => ({
