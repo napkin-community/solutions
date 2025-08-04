@@ -1,0 +1,11 @@
+{
+  "login": "xtalclr",
+  "name": "Jineon Baek (백진언)",
+  "avatar": {
+    "path": "../users/xtalclr.png",
+    "format": "png"
+  },
+  "social": {
+    "github": "https://github.com/jcpaik"
+  }
+}

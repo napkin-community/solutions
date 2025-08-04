@@ -19,4 +19,9 @@
     let avatar = read(metadata.avatar.path, encoding: none)
     (..metadata, avatar: (source: avatar, format: metadata.avatar.format))
   },
+  "xtalclr": {
+    let metadata = json("../users/xtalclr.json")
+    let avatar = read(metadata.avatar.path, encoding: none)
+    (..metadata, avatar: (source: avatar, format: metadata.avatar.format))
+  },
 )
