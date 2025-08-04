@@ -17,10 +17,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: typstyle
-          key: ${{ runner.os }}-typstyle-0.13.11
+          key: ${{ runner.os }}-typstyle-0.13.17
       - if: steps.cache-typstyle.outputs.cache-hit != 'true'
         run: |
-          curl -L -o typstyle https://github.com/Enter-tainer/typstyle/releases/download/v0.13.11/typstyle-x86_64-unknown-linux-gnu && \
+          curl -L -o typstyle https://github.com/Enter-tainer/typstyle/releases/download/v0.13.17/typstyle-x86_64-unknown-linux-gnu && \
           chmod +x typstyle
 
       # setup fonts

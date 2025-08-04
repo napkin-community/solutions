@@ -50,11 +50,11 @@
 
   First, $f$ is continuous in $(M, d)$.
   $
-                    d(y, x_n) & <= d(x, y) + d(x, x_n)                 \
-            d(y, x_n) + 1 / n & <= d(x, y) + d(x, x_n) + 1 / n         \
+                    d(y, x_n) & <= d(x, y) + d(x, x_n) \
+            d(y, x_n) + 1 / n & <= d(x, y) + d(x, x_n) + 1 / n \
     inf_n (d(y, x_n) + 1 / n) & <= d(x, y) + inf_n (d(x, x_n) + 1 / n) \
-                         f(y) & <= d(x, y) + f(x)                      \
-                |f(y) - f(x)| & <= d(x, y)                             \
+                         f(y) & <= d(x, y) + f(x) \
+                |f(y) - f(x)| & <= d(x, y) \
   $
 
   For all $epsilon > 0$,
@@ -91,9 +91,9 @@
   For all $n in NN$, since $1 / f(x_n) >= n$,
   $
     d'(p, x_(n+N)) & = d(p, x_(n+N)) + abs(1 / f(p) - 1 / f(x_(n+N))) \
-                   & = d(p, x_(n+N)) + 1 / f(x_(n+N)) - 1 / f(p)      \
-                   & >= n + N - N                                     \
-                   & >= n.                                            \
+                   & = d(p, x_(n+N)) + 1 / f(x_(n+N)) - 1 / f(p) \
+                   & >= n + N - N \
+                   & >= n. \
   $
 
   Therefore, $d'$ is not bounded.

@@ -11,7 +11,7 @@
   $forall v in V$, $v$ can be expressed as $a e_1 + b e_2$.
 
   $
-    T(v) & = T(a e_1 + b e_2)    \
+    T(v) & = T(a e_1 + b e_2) \
          & = a T(e_1) + b T(e_2) \
          & = a e_2 + b e_1
   $
