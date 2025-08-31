@@ -11,7 +11,7 @@
     For an exact sequence $A → B → C → D → E$ show that $C = 0$ iff the map $A → B$ is surjective and $D → E$ is injective.
 
     #sym.arrow.double)\
-    $"img" (A->B) = "ker" (B->C) = 0$\
+    $"img" (A->B) = "ker" (B->C) = B$\
     $"ker" (D->E)= "img" (C->D) = 0$
 
     #sym.arrow.double.l)\
