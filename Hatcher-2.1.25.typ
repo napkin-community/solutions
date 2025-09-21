@@ -7,13 +7,11 @@
 ]
 
 #solution(users.kiwiyou)[
-  Let $"Aut"(n)$ be a set of all permutations of ${0, 1, dots, n - 1}$.
-
   *Theorem.*
   $
     S Delta^n = sum_(pi in "Aut"({0, 1, dots, n})) "sgn"(pi)[b^pi_0, b^pi_1, dots, b^pi_n]
   $
-  where $b^pi_i$ is the barycenter of $[v_pi(0), v_pi(1), dots, v_pi(i)]$ and $v_i$ is the $i$-th vertex of $Delta^n$.
+  where $b^pi_i$ is the barycenter of $[v_pi(i), v_pi(i+1), dots, v_pi(n)]$ and $v_i$ is the $i$-th vertex of $Delta^n$.
 
   _Proof._ Use induction. Let $tilde(pi) in "Aut"({0, 1, dots, n + 1} without {i})$.
   $
