@@ -25,6 +25,8 @@ jobs:
           curl -L -o typstyle https://github.com/Enter-tainer/typstyle/releases/download/v${{ env.TYPSTYLE_VERSION }}/typstyle-x86_64-unknown-linux-gnu && \
           chmod +x typstyle
 
+      - run: ./typstyle --check .
+
       # setup fonts
       - id: cache-fonts
         uses: actions/cache@v4
@@ -37,5 +39,4 @@ jobs:
           TYPST_FONT_PATHS: ./fonts
         run: |
           ./x prepare-fonts
-          ./typstyle --check .
           ./x check
