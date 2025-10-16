@@ -4,6 +4,8 @@ on: [push, pull_request]
 jobs:
   check:
     runs-on: ubuntu-24.04
+    env:
+      TYPSTYLE_VERSION: 0.13.18
     steps:
       - uses: actions/checkout@v4
 
@@ -17,11 +19,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: typstyle
-          key: ${{ runner.os }}-typstyle-0.13.17
+          key: ${{ runner.os }}-typstyle-${{ env.TYPSTYLE_VERSION }}
       - if: steps.cache-typstyle.outputs.cache-hit != 'true'
         run: |
-          curl -L -o typstyle https://github.com/Enter-tainer/typstyle/releases/download/v0.13.17/typstyle-x86_64-unknown-linux-gnu && \
+          curl -L -o typstyle https://github.com/Enter-tainer/typstyle/releases/download/v${{ env.TYPSTYLE_VERSION }}/typstyle-x86_64-unknown-linux-gnu && \
           chmod +x typstyle
+
+      - run: ./typstyle --check .
 
       # setup fonts
       - id: cache-fonts
@@ -35,5 +39,4 @@ jobs:
           TYPST_FONT_PATHS: ./fonts
         run: |
           ./x prepare-fonts
-          ./typstyle --check .
           ./x check
