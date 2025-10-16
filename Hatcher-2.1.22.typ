@@ -55,7 +55,7 @@
   $H_k (X)$ is thus an abelian subgroup of free abelian group $ZZ^alpha$,
   and it must also be free. #sym.qed
 
-  *Theorem (b). * $H_n (X)$ is free with basis in bijective correspondence with
+  *Theorem (b).* $H_n (X)$ is free with basis in bijective correspondence with
   the $n$-cells if there are no cells of dimension $n - 1$ or $n + 1$.
 
   _Proof._ Look at the long exact sequence when $k >= n + 1$:
@@ -65,7 +65,7 @@
 
   Note that $tilde(H)_i (X^(k+1) slash X^k) = xor.big_alpha tilde(H)_i (S^(k+1)_alpha) = 0$ when $i <= n+1 < k + 1$.
   Exactness implies $H_n (X^k) tilde.equiv H_n (X^(k+1))$.
-  So if there are no cells of dimension $n + 1$, we have inifinite isomorphic chain
+  So if there are no cells of dimension $n + 1$, we have infinite isomorphic chain
   starting with $H_n (X^n) = H_n (X^(n+1))$:
 
   $ H_n (X^n) = H_n (X^(n+1)) tilde.equiv H_n (X^(n+2)) tilde.equiv dots.c $
