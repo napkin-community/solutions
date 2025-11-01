@@ -12,7 +12,7 @@
 #let def = $:equiv$
 
 #solution(users.ranolp)[
-  The exercise makes us define the recursor based on the projection of (maybe dependent) pair types.
+  The exercise makes us define the recursor based on the projection of (maybe dependent) product types.
 
   #enum[
     *$recP$*
@@ -44,40 +44,12 @@
     We have projections
 
     - $pr1 : (limits(Sigma)_(x:A) B(x)) -> A$
-    - $pr2 : limits(Pi)_(p:Sigma_((x:A)) B(x)) -> B(pr1(p))$
+    - $pr2 : limits(Pi)_(p:Sigma_((x:A)) B(x)) B(pr1(p))$
 
     with the following defining equations
 
     - $pr1((a, b)) def a$
     - $pr2((a, b)) def b$
-
-    #plain_box(
-      title: [Lemma 1],
-      subtitle: [$pr2((a, b)) def b$ is correct definition #sym.dash.em taken from the textbook],
-    )[
-
-      We can define $pr2$ as above because:
-
-      #line(length: 100%, stroke: 0.5pt + gray)
-
-      Given type family $C : (Sigma_((x:A)) B(x)) -> cal(U)$
-
-      for some $g : limits(Pi)_(a:A) med limits(Pi)_(b:B(a)) C((a, b))$
-
-      we can derive function $f : limits(Pi)_(p : Sigma_((x:A)) B(x)) -> C(p)$
-
-      with the following definition
-
-      $f((a, b)) :equiv g(a)(b)$
-
-      #line(length: 100%, stroke: 0.5pt + gray)
-
-      If we take $C(p) = B(pr1(p))$ then the $f$ has type
-
-      $f : limits(Pi)_(p : Sigma_((x:A)) B(x)) -> B(pr1(p))$
-
-      which has the desired type and semantics for $pr2$
-    ]
 
     So again we have two projection functions: $pr1$ and $pr2$.
 
@@ -93,8 +65,8 @@
 
     By $beta$-reducing on $pr1$ and $pr2$, we get $recDP(C, g, (a, b)) def g(a)(b)$,
 
-    and it correctly Church-encodes the dependently-typed product. #h(1fr) #sym.qed
+    and it correctly Church-encodes the dependent product. #h(1fr) #sym.qed
   ]
 
-  As shown above, the recursor can be defined with the projection functions of (maybe dependent) tuples.
+  As shown above, the recursor can be defined with the projection functions of (maybe dependent) products.
 ]
