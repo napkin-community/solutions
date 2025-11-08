@@ -27,7 +27,7 @@
     - $pr1((a, b)) def a$
     - $pr2((a, b)) def b$
 
-    Anyway, our goal is to define
+    Here, our goal is to define
 
     $recP : limits(Pi)_(C : cal(U)) (A -> B -> C) -> A times B -> C$
 
@@ -51,9 +51,7 @@
     - $pr1((a, b)) def a$
     - $pr2((a, b)) def b$
 
-    So again we have two projection functions: $pr1$ and $pr2$.
-
-    Anyway, our goal is to define
+    Here, our goal is to define
 
     $recDP : limits(Pi)_((C:cal(U))) (Pi_((x:A)) B(x) -> C) -> (Sigma_((x:A)) B(x)) -> C$
 
