@@ -25,6 +25,19 @@
 /// -> content
 #let coproduct = scale(sym.Pi, y: -100%)
 
+/// Definitionally Equal to.
+///
+/// ```example
+/// #defeq
+/// ```
+///
+/// -> str
+#let defeq = math.class("relation")[
+  #text(":", baseline: -0.03em)
+  #h(0%)
+  #sym.equiv
+]
+
 /// Glossary.
 ///
 /// #example(```
