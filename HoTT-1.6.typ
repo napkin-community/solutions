@@ -68,17 +68,23 @@
     )
   $
 
-  Verify this by case analysis:
+  Verify the type by case analysis:
 
   $
     (lambda y. ((x fst, x snd)(y) = x(y)) fst & equiv ((x fst, x snd) fst = x fst) \
     & equiv ((ind_boolean (rec_boolean (cal(U), A, B), x fst, x snd)) fst = x fst) \
-    & equiv (x fst = x fst) \
-    & equiv refl_(x fst) \
+    & equiv (x fst = x fst)
+  $
+  $
+    => refl_(x fst) : (lambda y. ((x fst, x snd)(y) = x(y)) fst
+  $
+  $
     (lambda y. ((x fst, x snd)(y) = x(y)) snd & equiv ((x fst, x snd) snd = x snd) \
     & equiv ((ind_boolean (rec_boolean (cal(U), A, B), x fst, x snd)) snd = x snd) \
-    & equiv (x snd = x snd) \
-    & equiv refl_(x snd)
+    & equiv (x snd = x snd)
+  $
+  $
+    => refl_(x snd) : (lambda y. ((x fst, x snd)(y) = x(y)) snd
   $
 
   Finally, we have $uniq'_(A times B)(x)_* : C((x fst, x snd)) -> C(x)$ to complete $ind'_(A times B)$. This is a new definition:
