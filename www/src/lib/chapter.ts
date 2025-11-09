@@ -12,7 +12,7 @@ export async function getChapters() {
     [
       ...exercises.map(({ filePath }) => {
         const chapterId = Number(
-          /([0-9]+)(?:\.(?:[0-9]+))+\.typ/.exec(path.basename(filePath))[1],
+          /([0-9]+)(?:\.(?:[0-9]+))+\.typ/.exec(path.basename(filePath!))![1],
         );
         return {
           id: chapterId,
@@ -21,7 +21,7 @@ export async function getChapters() {
       }),
       ...aFewHarderProblems.map(({ filePath }) => {
         const chapterId = Number(
-          /([0-9]+)[a-zA-Z]+\.typ/.exec(path.basename(filePath))[1],
+          /([0-9]+)[a-zA-Z]+\.typ/.exec(path.basename(filePath!))![1],
         );
         return {
           id: chapterId,
@@ -30,6 +30,7 @@ export async function getChapters() {
       }),
       { id: 'Le14', order: 69 },
       { id: 'Hatcher', order: 72 },
+      { id: 'HoTT', order: 75 },
     ],
     (chap) => chap.order,
   ).toSorted((a, b) => a.order - b.order);
@@ -40,6 +41,8 @@ export function getChapterName(id: number | string) {
     return 'Le14';
   } else if (id === 'Hatcher') {
     return 'Hatcher';
+  } else if (id === 'HoTT') {
+    return 'HoTT';
   } else {
     return `Ch. ${id}`;
   }
@@ -48,28 +51,42 @@ export function getChapterName(id: number | string) {
 export async function getChapterContents(id: number | string) {
   if (id === 'Le14') {
     const respect = await getCollection('le14');
-    return respect.map((content) => ({
-      ...content,
-      id: path
-        .parse(content.filePath)
-        .name.replace(/^Le14-/, '')
-        .replaceAll(/\./g, '-'),
-      display: path.parse(content.filePath).name.replace(/^Le14-/, ''),
-    })).toSorted(({ id: a }, { id: b }) => naturalCompare(a, b));
+    return respect
+      .map((content) => ({
+        ...content,
+        id: path
+          .parse(content.filePath!)
+          .name.replace(/^Le14-/, '')
+          .replaceAll(/\./g, '-'),
+        display: path.parse(content.filePath!).name.replace(/^Le14-/, ''),
+      }))
+      .toSorted(({ id: a }, { id: b }) => naturalCompare(a, b));
   }
 
   if (id === 'Hatcher') {
     const hatcher = await getCollection('hatcher');
-    return hatcher.map((content) => ({
-      ...content,
-      id: path
-        .parse(content.filePath)
-        .name.replace(/^Hatcher-/, '')
-        .replaceAll(/\./g, '-'),
-      display: path.parse(content.filePath).name.replace(/^Hatcher-/, ''),
-    })).toSorted(({ id: a }, { id: b }) => naturalCompare(a, b));
+    return hatcher
+      .map((content) => ({
+        ...content,
+        id: path
+          .parse(content.filePath!)
+          .name.replace(/^Hatcher-/, '')
+          .replaceAll(/\./g, '-'),
+        display: path.parse(content.filePath!).name.replace(/^Hatcher-/, ''),
+      }))
+      .toSorted(({ id: a }, { id: b }) => naturalCompare(a, b));
   }
 
+  if (id === 'HoTT') {
+    const hott = await getCollection('hott');
+    return hott
+      .map((content) => ({
+        ...content,
+        id: path.parse(content.filePath!).name.replace(/^HoTT-/, ''),
+        display: path.parse(content.filePath!).name.replace(/^HoTT-/, ''),
+      }))
+      .toSorted(({ id: a }, { id: b }) => naturalCompare(a, b));
+  }
 
   const exercises = await getCollection('exercises');
   const aFewHarderProblems = await getCollection('aFewHarderProblems');
@@ -78,37 +95,37 @@ export async function getChapterContents(id: number | string) {
     await Promise.all(
       exercises.map(async (content) => ({
         ...content,
-        metadata: await readMetadata(content.body),
+        metadata: await readMetadata(content.body!),
       })),
     )
   )
     .filter(({ filePath, metadata }) => {
       const chapterId = /([0-9]+)(?:\.(?:[0-9]+))+\.typ/.exec(
-        path.basename(filePath),
-      )[1];
+        path.basename(filePath!),
+      )![1];
       return id.toString() === chapterId && !metadata.skipFromBuild;
     })
-    .toSorted(({ filePath: a }, { filePath: b }) => naturalCompare(a, b));
+    .toSorted(({ filePath: a }, { filePath: b }) => naturalCompare(a!, b!));
   const problemsOrdered = aFewHarderProblems
     .filter(({ filePath }) => {
       const chapterId = /([0-9]+)[a-zA-Z]+\.typ/.exec(
-        path.basename(filePath),
-      )[1];
+        path.basename(filePath!),
+      )![1];
 
       return id.toString() === chapterId;
     })
-    .toSorted(({ filePath: a }, { filePath: b }) => naturalCompare(a, b));
+    .toSorted(({ filePath: a }, { filePath: b }) => naturalCompare(a!, b!));
 
   return [
     ...exercisesOrdered.map((content) => ({
       ...content,
-      id: path.parse(content.filePath).name.replaceAll(/\./g, '-'),
-      display: path.parse(content.filePath).name,
+      id: path.parse(content.filePath!).name.replaceAll(/\./g, '-'),
+      display: path.parse(content.filePath!).name,
     })),
     ...problemsOrdered.map((content) => ({
       ...content,
-      id: `problem-${path.parse(content.filePath).name.toLowerCase()}`,
-      display: `Problem ${path.parse(content.filePath).name}`,
+      id: `problem-${path.parse(content.filePath!).name.toLowerCase()}`,
+      display: `Problem ${path.parse(content.filePath!).name}`,
     })),
   ];
 }

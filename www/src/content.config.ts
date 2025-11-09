@@ -29,4 +29,17 @@ const hatcher = defineCollection({
   }),
 });
 
-export const collections = { aFewHarderProblems, exercises, le14, hatcher };
+const hott = defineCollection({
+  loader: glob({
+    base: '../',
+    pattern: 'HoTT-+([.0-9]).typ',
+  }),
+});
+
+export const collections = {
+  aFewHarderProblems,
+  exercises,
+  le14,
+  hatcher,
+  hott,
+};
