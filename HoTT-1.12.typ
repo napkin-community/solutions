@@ -4,6 +4,12 @@
 
 #plain_box(title: "HoTT-1.12")[
   Using the propositions as types interpretation, derive the following tautologies.
+
+  (i)  If $A$, then (if $B$ then $A$).
+
+  (ii) If $A$, then not (not $A$).
+
+  (iii) If (not $A$ or not $B$), then not $(A$ and $B)$.
 ]
 
 #solution(users.xtalclr)[
