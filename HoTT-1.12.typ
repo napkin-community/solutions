@@ -20,7 +20,7 @@
 #let rec = math.sans("rec")
 #let defeq = ":" + math.equiv
 #let pr1 = $sans("pr")_1$
-#let pr2 = $sans("pr")_1$
+#let pr2 = $sans("pr")_2$
 
 $sans("I") : A -> (B -> A)$
 
@@ -38,15 +38,15 @@ $sans("III") : ((A -> #F) + (B -> #F)) -> (A times B) -> #F$
 
 $sans("III") defeq lambda x. rec_((A -> #F) + (B -> #F))((A times B) -> #F, sans("case_a"), sans("case_b"), x)$ where
 
-$
+$[
 sans("case_a") : (A -> #F) -> (A times B) -> #F defeq lambda (c : A -> #F). lambda (p : A times B). c(pr1(p))
-$
+]
 
 and
 
-$
+$[
 sans("case_b") : (B -> #F) -> (A times B) -> #F defeq lambda (c : B -> #F). lambda (p : A times B). c(pr2(p)).
-$
+]
 
 In words: Assume either not $A$ or not $B$. One of them should be true.
 
