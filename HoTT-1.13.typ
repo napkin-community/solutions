@@ -17,7 +17,7 @@
 
   $ not not LEM : product_(P: universe) ((P + (P -> never)) -> never) -> never $
   $
-    not not LEM defeq lambda P. space square : ((P + (P -> never)) -> never) -> never
+    not not LEM defeq lambda P. space (square : ((P + (P -> never)) -> never) -> never)
   $
 
   Our first hole must get a function of type $(P + (P -> never)) -> never$ and derive a contradiction.
