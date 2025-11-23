@@ -1,6 +1,7 @@
 #import "template/napkin.typ": *
 #import "template/napkin-users.typ": *
 
+#let sp = " "
 
 #plain_box(title: "HoTT-1.8")[
   Define multiplication and exponentiation using $"rec"_ℕ$. Verify that $(ℕ, +, 0, ×, 1)$ is a semiring using only $"ind"_ℕ$. You will probably also need to use symmetry and transitivity of equality, Lemmas 2.1.1 and 2.1.2.
@@ -30,7 +31,7 @@
   $ "assoc"_(+):∏_(i,j,k:ℕ)i+j+k=i+(j+k) $
 
   $
-    "assoc"_(+):≡"ind"_ℕ (∏_(i,j,k:ℕ)i+j+k=i+(j+k), "assoc"_(+,0), "assoc"_(+,"s"))
+    "assoc"_(+):≡"ind"_ℕ (λ(i:ℕ). ∏_(j,k:ℕ)i+j+k=i+(j+k), "assoc"_(+,0), "assoc"_(+,"s"))
   $
 
   $ "assoc"_(+,0):∏_(j,k:ℕ) 0+j+k=0+(j+k) $
@@ -48,7 +49,7 @@
   $ λ i. "refl"_i : ∏_(i:ℕ) 0+i=i $
 
   $
-    "ind"_ℕ (∏_(i:ℕ) i+0=i, "refl"_0, λ i. λ h. "ap"_("succ") (h)): ∏_(i:ℕ) i+0=i
+    "ind"_ℕ (λ(i:ℕ).sp i+0=i, "refl"_0, λ i. λ h. "ap"_("succ") (h)): ∏_(i:ℕ) i+0=i
   $
 
   Prove $i+j=j+i$ with double induction.
@@ -56,7 +57,7 @@
   $ "commut"_(+):∏_(i,j:ℕ) i+j=j+i $
 
   $
-    "commut"_(+):"ind"_ℕ (∏_(i,j:ℕ) i+j=j+i, "commut"_(+,0), "commut"_(+,"s"))
+    "commut"_(+):"ind"_ℕ (λ(i:ℕ). ∏_(j:ℕ) i+j=j+i, "commut"_(+,0), "commut"_(+,"s"))
   $
 
   $ "commut"_(+,0):∏_(j:ℕ) 0+j=j+0 $
@@ -66,7 +67,7 @@
   $ "commut"_(+,"s"):∏_(i:ℕ)(∏_(j:ℕ) i+j=j+i)→∏_(j:ℕ)"succ"(i)+j=j+"succ"(i) $
 
   $
-    "commut"_(+,"s")(i,h_1):≡"ind"_ℕ (∏_(j:ℕ)"succ"(i)+j=j+"succ"(i), "summon"("succ"(i)+0="succ"(i)), "commut_inner"(i, h_1))
+    "commut"_(+,"s")(i,h_1):≡"ind"_ℕ (λ(j:ℕ). "succ"(i)+j=j+"succ"(i), "summon"("succ"(i)+0="succ"(i)), "commut_inner"(i, h_1))
   $
 
   $
@@ -92,20 +93,22 @@
   $ λ i. "summon"(i+0=i) : ∏_(i:ℕ) 1×i=i $
 
   $
-    "ind"_ℕ (∏_(i:ℕ) i×1=i, "refl"_0, λ i. λ h. "ap"_("succ") (h)): ∏_(i:ℕ) i×1=i
+    "ind"_ℕ (λ(i:ℕ).sp i×1=i, "refl"_0, λ i. λ h. "ap"_("succ") (h)): ∏_(i:ℕ) i×1=i
   $
 
   Prove 0 annihilates multiplication.
 
   $ λ i. "refl"_0: ∏_(i:ℕ) 0×i=0 $
 
-  $ "ind"_ℕ (∏_(i:ℕ) i×0=0, "refl"_0, λ i. λ h. h): ∏_(i:ℕ) i×0=0 $
+  $ "ind"_ℕ (λ(i:ℕ).sp i×0=0, "refl"_0, λ i. λ h. h): ∏_(i:ℕ) i×0=0 $
 
   Prove distribution.
 
   $ "distrbl": ∏_(i,j,k:ℕ) i×(j+k)=i×j+i×k $
 
-  $ "distrbl":≡"ind"_ℕ (∏_(i,j,k:ℕ) i×(j+k)=i×j+i×k,"distrbl"_0,"distrbl"_"s") $
+  $
+    "distrbl":≡"ind"_ℕ (λ(i:ℕ). ∏_(j,k:ℕ) i×(j+k)=i×j+i×k,"distrbl"_0,"distrbl"_"s")
+  $
 
   $ "distrbl"_0 : ∏_(j,k:ℕ) 0×(j+k)=0×j+0×k $
 
@@ -130,7 +133,7 @@
   $ "distribr": ∏_(i,j,k:ℕ) (i+j)×k=i×k+j×k $
 
   $
-    "distribr":≡"ind"_ℕ (∏_(i,j,k:ℕ) (i+j)×k=i×k+j×k,"distribr"_0,"distribr"_"s")
+    "distribr":≡"ind"_ℕ (λ(i:ℕ). ∏_(j,k:ℕ) (i+j)×k=i×k+j×k,"distribr"_0,"distribr"_"s")
   $
 
   $ "distribr"_0 : ∏_(j,k:ℕ) (0+j)×k=0×k+j×k $
@@ -154,7 +157,7 @@
   $ "assoc"_(×):∏_(i,j,k:ℕ)i×j×k=i×(j×k) $
 
   $
-    "assoc"_(×):≡"ind"_ℕ (∏_(i,j,k:ℕ)i×j×k=i×(j×k), "assoc"_(×,0), "assoc"_(×,"s"))
+    "assoc"_(×):≡"ind"_ℕ (λ(i:ℕ). ∏_(j,k:ℕ)i×j×k=i×(j×k), "assoc"_(×,0), "assoc"_(×,"s"))
   $
 
   $ "assoc"_(×,0):∏_(j,k:ℕ) 0×j×k=0×(j×k) $
