@@ -36,7 +36,7 @@
   This time $f$ can receive a witness of $P$.
 
   $
-    not not LEM defeq lambda P. space lambda f. space f(inr(lambda p. f(inl(p))))
+    not not LEM defeq lambda P. space lambda f. space f(inr(lambda p. space f(inl(p))))
   $
 
   #sym.qed
