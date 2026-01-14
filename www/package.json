@@ -15,5 +15,11 @@
     "cheerio": "^1.1.2",
     "es-toolkit": "^1.41.0"
   },
-  "packageManager": "pnpm@10.28.0"
+  "packageManager": "pnpm@10.28.0",
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
+  }
 }
