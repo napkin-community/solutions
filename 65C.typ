@@ -10,7 +10,7 @@
 
 #solution(users.finalchild)[
   Assume a sequence of moves that swaps every pair of stones exactly once.\
-  Fix a stone $O$. Every other stone should swap with $O$ either counterwise or counterclockwise.\
+  Fix a stone $O$. Every other stone should swap with $O$ either clockwise or counterclockwise.\
 
   \
 
