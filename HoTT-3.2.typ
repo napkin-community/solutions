@@ -67,7 +67,7 @@
 
   To use univalence and transport, we need equivalence.
 
-  Forward direction: when $x equiv inl(a)$ and $y equiv inr(a')$, $code(x, y) equiv (a = a')$.
+  Forward direction: when $x equiv inl(a)$ and $y equiv inl(a')$, $code(x, y) equiv (a = a')$.
   do a path induction with $a equiv a'$, $c equiv refl_a$:
   $
     encode(x, y, decode(x, y, c))
@@ -78,7 +78,7 @@
     &equiv c
   $
 
-  The case $x equiv inr(b)$ and $y equiv inl(b')$ is symmetric.
+  The case $x equiv inr(b)$ and $y equiv inr(b')$ is symmetric.
 
   Backward direction: path induction with $a = a'$, $p equiv refl_inl(a)$:
   $
