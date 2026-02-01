@@ -48,7 +48,7 @@
   $ decode : product_(x, y : A + B) code(x, y) -> (x eq(A + B) y) $
   #let ap = math.sans("ap")
   $ decode(inl(a), inl(a'), c) defeq ap_inl (c) $
-  $ decode(inl(b), inl(b'), c) defeq ap_inr (c) $
+  $ decode(inr(b), inr(b'), c) defeq ap_inr (c) $
 
   == 2. Construction of $isProp(code(x, y))$
 
