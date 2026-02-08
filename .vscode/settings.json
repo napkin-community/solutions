@@ -1,3 +1,6 @@
 {
-  "tinymist.formatterMode": "typstyle"
+  "tinymist.formatterMode": "typstyle",
+  "tinymist.fontPaths": [
+    "${workspaceFolder}/fonts"
+  ]
 }
