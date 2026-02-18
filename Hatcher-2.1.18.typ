@@ -12,7 +12,7 @@
 #let where = "where"
 
 #let note(param, size: 1em) = {
-  $&&#h(25pt)#text(size, rgb("#777"))[ ⋯\u{2009}(#param)]$
+  $&&wide#text(size, rgb("#777"))[$⋯med$(#param)]$
 }
 
 #solution(users.simnalamburt)[
