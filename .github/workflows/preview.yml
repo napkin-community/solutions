@@ -31,7 +31,7 @@ jobs:
       - if: steps.find-typ.outputs.skip == 'false'
         uses: typst-community/setup-typst@v4
         with:
-          typst-version: ^0.13.0
+          typst-version: ^0.14.0
 
       # Setup fonts
       - if: steps.find-typ.outputs.skip == 'false'
@@ -67,32 +67,43 @@ jobs:
             const path = `pr-${prNumber}.png`;
             const content = fs.readFileSync('preview.png', { encoding: 'base64' });
 
-            // Ensure _preview branch exists
+            let commitSha;
+
+            // Check if _preview branch exists
+            let branchExists = true;
             try {
               await github.rest.repos.getBranch({ owner, repo, branch: '_preview' });
             } catch {
-              const { data: tree } = await github.rest.git.createTree({ owner, repo, tree: [] });
-              const { data: commit } = await github.rest.git.createCommit({
-                owner, repo, message: 'Init preview branch', tree: tree.sha, parents: [],
-              });
-              await github.rest.git.createRef({ owner, repo, ref: 'refs/heads/_preview', sha: commit.sha });
+              branchExists = false;
             }
 
-            // Get existing file SHA if updating
-            let sha;
-            try {
-              const { data } = await github.rest.repos.getContent({ owner, repo, path, ref: '_preview' });
-              sha = data.sha;
-            } catch {}
-
-            // Upload image
-            const { data: uploaded } = await github.rest.repos.createOrUpdateFileContents({
-              owner, repo, path,
-              message: `Preview for PR #${prNumber}`,
-              content, branch: '_preview',
-              ...(sha ? { sha } : {}),
-            });
-            const commitSha = uploaded.commit.sha;
+            if (!branchExists) {
+              // Create branch with the PNG as the first commit
+              const { data: blob } = await github.rest.git.createBlob({ owner, repo, content, encoding: 'base64' });
+              const { data: tree } = await github.rest.git.createTree({
+                owner, repo,
+                tree: [{ path, mode: '100644', type: 'blob', sha: blob.sha }],
+              });
+              const { data: commit } = await github.rest.git.createCommit({
+                owner, repo, message: `Preview for PR #${prNumber}`, tree: tree.sha, parents: [],
+              });
+              await github.rest.git.createRef({ owner, repo, ref: 'refs/heads/_preview', sha: commit.sha });
+              commitSha = commit.sha;
+            } else {
+              // Get existing file SHA if updating
+              let sha;
+              try {
+                const { data } = await github.rest.repos.getContent({ owner, repo, path, ref: '_preview' });
+                sha = data.sha;
+              } catch {}
+              const { data: uploaded } = await github.rest.repos.createOrUpdateFileContents({
+                owner, repo, path,
+                message: `Preview for PR #${prNumber}`,
+                content, branch: '_preview',
+                ...(sha ? { sha } : {}),
+              });
+              commitSha = uploaded.commit.sha;
+            }
 
             // Create or update PR comment
             const marker = '<!-- typst-preview -->';

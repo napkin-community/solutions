@@ -5,14 +5,14 @@ jobs:
   check:
     runs-on: ubuntu-24.04
     env:
-      TYPSTYLE_VERSION: 0.13.18
+      TYPSTYLE_VERSION: 0.14.4
     steps:
       - uses: actions/checkout@v4
 
       # setup typst
       - uses: typst-community/setup-typst@v4
         with:
-          typst-version: ^0.13.0
+          typst-version: ^0.14.0
 
       # setup typstyle
       - id: cache-typstyle
