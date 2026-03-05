@@ -15,9 +15,16 @@
   $ (a, pi): isContr(A) equiv sum_((a: A)) product_((x: A)) (a = x). $
   Thus $pi(x) : a = x$ for each $x : A$.
 
+  Use $pi(x)$ to transport $P(x)$ into $P(a)$:
+
+  #let transport = math.sans("transport")
+  $
+    pi(x)^(-1)_* defeq transport^P (pi(x)^(-1), -) : P(x) -> P(a)
+  $
+
   Define
   $
-    f : imagP -> P(a) \
+    f : (imagP) -> P(a) \
     f(z) defeq pi(pr_1(z))^(-1)_*(pr_2(z))
   $
   and
@@ -48,13 +55,9 @@
   $
   Taking inverse and unfolding $f, g$ gives
   $
-    g(f(z))
-    =
-    (a, pi(pr_1(z))^(-1)_*(pr_2(z)))
-    =
-    (pr_1(z), pr_2(z))
-    =
-    z.
+    g(f(z)) & equiv (a, pi(pr_1(z))^(-1)_*(pr_2(z))) && quad #[(#{ sym.beta }-reduction)] \
+    & = (pr_1(z), pr_2(z)) && quad #[(path lifting)] \
+    & = z. && quad #[(Corollary 2.7.3.)]
   $
   Hence $g compose f$ is homotopic to the identity on $imagP$.
 
@@ -63,24 +66,36 @@
   Let $y : P(a)$. We compute
   $
     f(g(y))
-    = f((a, y))
-    = pi(a)^(-1)_*(y).
+    equiv f((a, y))
+    equiv pi(a)^(-1)_*(y).
   $
-  Consider the family
+
+  #let transportconst = math.sans("transportconst")
+  #plain_box(title: "Lemma 2.3.5")[
+    If $P : A -> cal(U)$ is defined by $P(x) defeq B$ for a fixed $B : cal(U)$,
+    then for any $x, y : A$ and $p : x = y$ and $b : B$ we have a path
+    $ transportconst^B_p (b) : transport^P (p, b) = b. $
+  ]
+
+  Applying *Lemma 2.3.5* to
   $
-    Q(p) defeq p^(-1)_*(y) = y, quad p : a = a.
+    B defeq P(a) : cal(U),
+    quad
+    p defeq pi(a)^(-1) : a = a,
+    quad
+    b defeq y : P(a).
   $
-  By path induction on $p$, it suffices to prove $Q(refl_a)$, namely
+  Then
   $
-    refl_a^(-1)_*(y) = y,
+    transportconst^(P(a))_(pi(a)^(-1)) (y) : pi(a)^(-1)_* (y) = y.
   $
-  which is exactly the computation rule for transport along reflexivity.
-  Therefore $f(g(y)) = y$, so $f compose g$ is homotopic to the identity on
+
+  $f(g(y)) = y$ is inhabited, so $f compose g$ is homotopic to the identity on
   $P(a)$.
 
   The two homotopies show that $g$ is a quasi-inverse of $f$, hence
   $
-    imagP tilde.eq P(a).
+    (imagP) tilde.eq P(a).
   $
 
   #sym.qed
