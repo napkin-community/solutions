@@ -1,0 +1,111 @@
+name: preview
+on:
+  pull_request:
+    paths:
+      - "**.typ"
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v6
+
+      # Find the single changed .typ file
+      - id: find-typ
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          files=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files --jq '[.[].filename | select(endswith(".typ"))] | .[]')
+          count=$(echo "$files" | grep -c '.' || true)
+          if [ "$count" -ne 1 ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            echo "file=$files" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Setup typst
+      - if: steps.find-typ.outputs.skip == 'false'
+        uses: typst-community/setup-typst@v4
+        with:
+          typst-version: ^0.13.0
+
+      # Setup fonts
+      - if: steps.find-typ.outputs.skip == 'false'
+        id: cache-fonts
+        uses: actions/cache@v4
+        with:
+          path: fonts
+          key: ${{ runner.os }}-fonts-1
+
+      - if: steps.find-typ.outputs.skip == 'false'
+        run: ./x prepare-fonts
+
+      # Compile to PNG
+      - if: steps.find-typ.outputs.skip == 'false'
+        env:
+          TYPST_FONT_PATHS: ./fonts
+        run: |
+          file="${{ steps.find-typ.outputs.file }}"
+          tmp=$(mktemp)
+          printf '#set page(height: auto, margin: 1cm)\n' | cat - "$file" > "$tmp"
+          mv "$tmp" "$file"
+          typst compile "$file" preview.png --ppi 72
+
+      # Upload image to _preview branch and comment on PR
+      - if: steps.find-typ.outputs.skip == 'false'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const prNumber = context.issue.number;
+            const path = `pr-${prNumber}.png`;
+            const content = fs.readFileSync('preview.png', { encoding: 'base64' });
+
+            // Ensure _preview branch exists
+            try {
+              await github.rest.repos.getBranch({ owner, repo, branch: '_preview' });
+            } catch {
+              const { data: tree } = await github.rest.git.createTree({ owner, repo, tree: [] });
+              const { data: commit } = await github.rest.git.createCommit({
+                owner, repo, message: 'Init preview branch', tree: tree.sha, parents: [],
+              });
+              await github.rest.git.createRef({ owner, repo, ref: 'refs/heads/_preview', sha: commit.sha });
+            }
+
+            // Get existing file SHA if updating
+            let sha;
+            try {
+              const { data } = await github.rest.repos.getContent({ owner, repo, path, ref: '_preview' });
+              sha = data.sha;
+            } catch {}
+
+            // Upload image
+            const { data: uploaded } = await github.rest.repos.createOrUpdateFileContents({
+              owner, repo, path,
+              message: `Preview for PR #${prNumber}`,
+              content, branch: '_preview',
+              ...(sha ? { sha } : {}),
+            });
+            const commitSha = uploaded.commit.sha;
+
+            // Create or update PR comment
+            const marker = '<!-- typst-preview -->';
+            const imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/_preview/${path}?v=${commitSha}`;
+            const body = `${marker}\n![preview](${imageUrl})`;
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner, repo, issue_number: prNumber,
+            });
+            const existing = comments.find(c => c.body.startsWith(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number: prNumber, body });
+            }
