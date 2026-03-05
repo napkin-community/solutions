@@ -5,7 +5,7 @@ This repository serves solutions for the problems from the book, [An Infinitely 
 ```bash
 cd www
 
-# Node.js 22+ and typst 0.13 are required
+# Node.js 22+ and typst 0.14 are required
 
 # Install dependencies
 pnpm i
