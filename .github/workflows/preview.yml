@@ -51,9 +51,9 @@ jobs:
         run: |
           file="${{ steps.find-typ.outputs.file }}"
           tmp=$(mktemp)
-          printf '#set page(height: auto, margin: 1cm)\n' | cat - "$file" > "$tmp"
+          printf '#set page(height: auto, margin: 10pt)\n' | cat - "$file" > "$tmp"
           mv "$tmp" "$file"
-          typst compile "$file" preview.png --ppi 72
+          typst compile "$file" preview.png --ppi 144
 
       # Upload image to _preview branch and comment on PR
       - if: steps.find-typ.outputs.skip == 'false'
