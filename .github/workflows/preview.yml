@@ -107,7 +107,7 @@ jobs:
 
             // Create or update PR comment
             const marker = '<!-- typst-preview -->';
-            const imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/_preview/${path}?v=${commitSha}`;
+            const imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${commitSha}/${path}`;
             const body = `${marker}\n![preview](${imageUrl})`;
 
             const { data: comments } = await github.rest.issues.listComments({
