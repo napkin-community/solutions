@@ -4,8 +4,6 @@
 #let Fin = math.sans("Fin")
 #let AC = math.sans("AC")
 #let acfin = math.sans("acfin")
-#let ind = math.sans("ind")
-#let rec = math.sans("rec")
 #let inl = math.sans("inl")
 #let inr = math.sans("inr")
 
@@ -152,7 +150,7 @@
   $
   Then
   $
-    (g,h) : sum_(lr((g : product_((x: Fin(n)+bold(1))), A(x)), size: #1em)) product_((x: Fin(n)+bold(1))) P(x,g(x)),
+    (g,h) : sum_(lr((g : product_((x: Fin(n)+bold(1))) A(x)), size: #1em)) product_((x: Fin(n)+bold(1))) P(x,g(x)),
   $
   so
   $
