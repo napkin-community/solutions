@@ -1,122 +1,169 @@
 #import "template/napkin.typ": *
 #import "template/napkin-users.typ": *
 
-#let link = text.with(fill: rgb("#007300"))
 #let Fin = math.sans("Fin")
+#let AC = math.sans("AC")
+#let acfin = math.sans("acfin")
+#let ind = math.sans("ind")
+#let rec = math.sans("rec")
+#let inl = math.sans("inl")
+#let inr = math.sans("inr")
+
 #plain_box(title: "HoTT 3.22")[
   As in classical set theory, the finite version of the axiom of choice is a theorem.
-  Prove that the axiom of choice (#link[3.8.1]) holds when $X$ is a finite type $Fin(n)$ (as defined in Exercise #link[1.9]).
+  Prove that the axiom of choice holds when $X$ is a finite type $Fin(n)$.
 ]
 
 #solution(users.kiwiyou)[
-  #let acfin = math.sans("acfin")
-  #let AC(X) = {
-    $
-      (product_(x: #X) norm(sum_(a: A(x)) P(x, a), size: #2em))
-      -> norm(sum_(lr((g: product_((x: #X)) A(x)), size: #1em)) product_((x: #X)) P(x, g(x)), size: #2em)
-    $
-  }
-  #plain_box(title: "Theorem", subtitle: "Finite Axiom of Choice")[
-    Assume $n: NN$ and type families
-    $
-      A: Fin(n) -> cal(U) quad "and" quad P: product_(x: Fin(n)) A(x) -> cal(U),
-    $
-    there exists
-    $
-      acfin_n (A, P) : sans("AC")(Fin(n)),
-    $
-    where
-    $
-      sans("AC")(X) defeq AC(X).
-    $
-  ]
-
-  We use the following definition of $Fin(n)$:
-  #let succ = math.sans("succ")
+  For a type $X$, let
   $
-    Fin(0) defeq bold(0) \
-    Fin(succ(n)) defeq Fin(n) + bold(1).
+    AC(X)
+    defeq
+    (product_(x: X) norm(sum_(a: A(x)) P(x,a), size: #2em))
+    ->
+    norm(sum_(lr((g : product_((x: X)) A(x)), size: #1em)) product_((x: X)) P(x,g(x)), size: #2em),
+  $
+  where $A : X -> cal(U)$ and $P : product_(x: X) (A(x) -> cal(U))$.
+
+  We prove by induction on $n : NN$ that for every
+  $
+    A : Fin(n) -> cal(U)
+    quad "and" quad
+    P : product_(x: Fin(n)) (A(x) -> cal(U)),
+  $
+  there is
+  $
+    acfin_n (A,P) : AC(Fin(n)).
   $
 
-  From this it's natural to prove $acfin_n$ by induction principle of $NN$.
-  First unfold the definition of $Fin(0)$.
-
+  We use the definition
   $
-    acfin_0 (A, P) : AC(Fin(0)) \
-    equiv AC(bold(0))
-  $
-
-  We can directly construct the $g$ and $product P(x, g(x))$ from $x : bold(0)$.
-
-  #let rec = math.sans("rec")
-  $
-                                            x & : bold(0) \
-                        rec_bold(0) (A(x), x) & : A(x) \
-    g_0 defeq lambda x. rec_bold(0) (A(x), x) & : product_((x: bold(0))) A(x)
-  $
-  $
-    x &: bold(0) \
-    rec_bold(0) (P(x, g(x)), x) &: P(x, g(x)) \
-    h_0 defeq lambda x. rec_bold(0) (P(x, g(x)), x) &: product_((x: bold(0))) P(x, g(x))
+    Fin(0) defeq bold(0),
+    quad
+    Fin(n+1) defeq Fin(n) + bold(1).
   $
 
-  Combine $g_0$ and $h_0$ and truncate finalizes the base case.
+  == Base Case
+
+  Since $Fin(0) defeq bold(0)$, it suffices to construct an element of $AC(bold(0))$.
+  Let
   $
-    (g_0, h_0) &: sum_(lr((g: product_((x: bold(0))) A(x)), size: #1em)) product_((x: bold(0))) P(x, g(x)) \
-    abs((g_0, h_0)) &: norm(sum_(lr((g: product_((x: bold(0))) A(x)), size: #1em)) product_((x: bold(0))) P(x, g(x)), size: #2em) \
-    acfin_0 (A, P) defeq lambda f. abs((g_0, h_0)) &: AC(bold(0))
+    f : product_(x: bold(0)) norm(sum_(a: A(x)) P(x,a), size: #2em).
+  $
+  By the induction principle of the empty type, define
+  $
+    g_0 : product_(x: bold(0)) A(x)
+    quad "and" quad
+    h_0 : product_(x: bold(0)) P(x,g_0(x)).
+  $
+  Therefore
+  $
+    (g_0,h_0) : sum_(lr((g : product_((x: bold(0))) A(x)), size: #1em)) product_((x: bold(0))) P(x,g(x)),
+  $
+  and hence
+  $
+    acfin_0 (A,P)(f) defeq abs((g_0,h_0))
+  $
+  is an element of $AC(bold(0))$.
+
+  == Induction Step
+
+  Assume
+  $
+    acfin_n :
+    product_((A : Fin(n) -> cal(U)))
+    product_(lr((P : product_(y: Fin(n)) (A(y) -> cal(U))), size: #1em))
+    AC(Fin(n)).
+  $
+  We must construct $acfin_(n+1)$.
+
+  Let
+  $
+    A : Fin(n)+bold(1) -> cal(U),
+    quad
+    P : product_(x: Fin(n)+bold(1)) (A(x) -> cal(U)),
+  $
+  and suppose
+  $
+    f : product_(x: Fin(n)+bold(1)) norm(sum_(a: A(x)) P(x,a), size: #2em).
+  $
+  Define restricted families on $Fin(n)$ by
+  $
+    B(y) defeq A(inl(y)),
+    quad
+    Q(y,b) defeq P(inl(y),b).
+  $
+  Then
+  $
+    f compose inl : product_(y: Fin(n)) norm(sum_(b: B(y)) Q(y,b), size: #2em),
+  $
+  so the induction hypothesis yields
+  $
+    u
+    defeq
+    acfin_n (B,Q)(f compose inl)
+    :
+    norm(sum_(lr((g_n : product_(y: Fin(n)) B(y)), size: #1em)) product_((y: Fin(n))) Q(y,g_n (y)), size: #2em).
+  $
+  Also,
+  $
+    v
+    defeq
+    f(inr(star))
+    :
+    norm(sum_(a: A(inr(star))) P(inr(star),a), size: #2em).
   $
 
-  Next we prove the induction step, deriving $acfin_succ(n)$ from $acfin_n$.
-  First we unfold the definition of $Fin(succ(n))$:
+  Let
   $
-    acfin_succ(n) (A, P) : AC(Fin(n) + bold(1)).
+    T
+    defeq
+    norm(sum_(lr((g: product_(x: Fin(n)+bold(1)) A(x)), size: #1em)) product_((x: Fin(n)+bold(1))) P(x,g(x)), size: #2em).
+  $
+  Since $T$ is a propositional truncation, it is a mere proposition. Therefore we may eliminate both $u$ and $v$ into $T$.
+
+  Assume representatives
+  $
+    (g_n,h_n) : sum_(lr((g_n: product_(y: Fin(n)) B(y)), size: #1em)) product_((y: Fin(n))) Q(y,g_n (y))
+  $
+  and
+  $
+    (a,p) : sum_(a: A(inr(star))) P(inr(star),a).
+  $
+  Define
+  $
+    g : product_((x: Fin(n)+bold(1))) A(x)
+  $
+  by coproduct recursion:
+  $
+    g(inl(y)) defeq g_n (y),
+    quad
+    g(inr(star)) defeq a.
+  $
+  Similarly define
+  $
+    h : product_((x: Fin(n)+bold(1))) P(x,g(x))
+  $
+  by coproduct recursion:
+  $
+    h(inl(y)) defeq h_n (y),
+    quad
+    h(inr(star)) defeq p.
+  $
+  Then
+  $
+    (g,h) : sum_(lr((g : product_((x: Fin(n)+bold(1))), A(x)), size: #1em)) product_((x: Fin(n)+bold(1))) P(x,g(x)),
+  $
+  so
+  $
+    abs((g,h)) : T.
   $
 
-  To make use of induction hypothesis $acfin_n$, let
-  #let inl = math.sans("inl")
+  Hence, by two applications of the elimination principle for propositional truncation into the mere proposition $T$, we obtain
   $
-    y : Fin(n) \
-    inl(y) : Fin(n) + bold(1) \
-    B(y) defeq A(inl(y)) \
-    Q(y, B(y)) defeq P(inl(y), B(y)) \
+    acfin_(n+1) (A,P)(f) : T.
   $
-  then
-  $
-    acfin_n (B, Q) : (product_(y: Fin(n)) norm(sum_(b: B(y)) Q(y, b), size: #2em))
-    -> norm(sum_(lr((g: product_((y: Fin(n))) B(y)), size: #1em)) product_((y: Fin(n))) Q(y, g(y)), size: #2em) \
-    equiv (product_(y: Fin(n)) norm(sum_(b: A(inl(y))) P(inl(y), b), size: #2em))
-    -> norm(sum_(lr((g: product_((y: Fin(n))) A(inl(y))), size: #1em)) product_((y: Fin(n))) P(inl(y), g(y)), size: #2em).
-  $
+  Concretely, we first eliminate $u$, then eliminate $v$, and on representatives $(g_n,h_n)$ and $(a,p)$ we return $abs((g,h)) : T$.
 
-  If we assume hypothesis $f_succ(n)$:
-  $
-    f_succ(n) &: product_(x: Fin(n) + bold(1)) norm(sum_(a: A(x)) P(x, a), size: #2em) \
-    f_succ(n) compose inl &: product_(y: Fin(n)) norm(sum_(a: A(inl(y))) P(inl(y), a), size: #2em) \
-    acfin_n (B, Q, f_succ(n) compose inl) &: norm(sum_(lr((g: product_((y: Fin(n))) A(inl(y))), size: #1em)) product_((y: Fin(n))) P(inl(y), g(y)), size: #2em).
-  $
-
-  If we have $g_n : product_((y : Fin(n))) A(inl(y))$ and $h_n : product_((y : Fin(n))) P(inl(y), g_n (y))$, we can wrap them to construct $g_succ(n)$ and $h_succ(n)$ partially.
-  $
-    g_succ(n) (inl(y)) defeq g_n (y) &: A(inl(y)) \
-    h_succ(n) (inl(y)) defeq h_n (y) &: P(inl(y), g_n (y)) equiv P(inl(y), g_succ(n) (inl(y)))
-  $
-
-  #let inr = math.sans("inr")
-  If we also have $a: A(inr(star))$ and $p: P(inr(star), a)$, we can wrap them to complete our $g_succ(n)$ and $h_succ(n)$.
-  $
-    g_succ(n) (inr(star)) defeq a &: A(inr(star)) \
-    h_succ(n) (inr(star)) defeq p &: P(inr(star), a) equiv P(inr(star), g_succ(n) (inr(star)))
-  $
-
-  Our previous two dependencies are propositional truncation; and our goal is mere proposition. Applying recursion principle of $norm(-)$ give us a full proof.
-
-  $
-    acfin_n (B, Q, f_succ(n) compose inl) &: norm(sum_(lr((g: product_((y: Fin(n))) A(inl(y))), size: #1em)) product_((y: Fin(n))) P(inl(y), g(y)), size: #2em) \
-    (g_n, h_n) &: sum_(lr((g: product_((y: Fin(n))) A(inl(y))), size: #1em)) product_((y: Fin(n))) P(inl(y), g(y)) \
-    f_succ(n) (inr(star)) &: norm(sum_(a: A(inr(star))) P(inr(star), a), size: #2em) \
-    (a, p) &: sum_(a: A(inr(star))) P(inr(star), a) \
-    abs((g_succ(n), h_succ(n))) &: norm(sum_(lr((g: product_((x: Fin(succ(n)))) A(x)), size: #1em)) product_((x: Fin(succ(n)))) P(x, g(x)), size: #2em) \
-  $
-  #sym.qed
+  This completes the induction, and therefore $AC(Fin(n))$ holds for every $n : NN$.
 ]
