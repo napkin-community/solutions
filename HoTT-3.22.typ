@@ -165,5 +165,5 @@
   $
   Concretely, we first eliminate $u$, then eliminate $v$, and on representatives $(g_n,h_n)$ and $(a,p)$ we return $abs((g,h)) : T$.
 
-  This completes the induction, and therefore $AC(Fin(n))$ holds for every $n : NN$.
+  This completes the induction, and therefore $AC(Fin(n))$ holds for every $n : NN$. #sym.qed
 ]
