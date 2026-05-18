@@ -50,7 +50,7 @@
     mat(0, -y, y; y, 0, -y; -y, y, 0)
   $
 
-  Use rank-nulllity theorem again! Now consider following linear map
+  Use rank-nullity theorem again! Now consider following linear map
 
   $R : mat(a_(i j)) |-> a_(0 2) : ker Q -> RR$
 
