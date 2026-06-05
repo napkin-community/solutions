@@ -16,7 +16,7 @@ jobs:
       actions: read
       contents: write
       issues: write
-      pull-requests: read
+      pull-requests: write
     steps:
       - id: find-artifact
         uses: actions/github-script@v8
