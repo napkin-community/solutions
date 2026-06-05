@@ -57,9 +57,20 @@ jobs:
 
       # Make the rendered image available to the privileged publisher workflow.
       - if: steps.find-typ.outputs.skip == 'false'
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          mkdir -p preview-artifact
+          cp preview.png preview-artifact/preview.png
+          printf '{"pr_number":%s,"head_sha":"%s"}\n' "$PR_NUMBER" "$HEAD_SHA" > preview-artifact/metadata.json
+
+      - if: steps.find-typ.outputs.skip == 'false'
         uses: actions/upload-artifact@v7
         with:
           name: typst-preview
-          path: preview.png
+          path: |
+            preview-artifact/preview.png
+            preview-artifact/metadata.json
           if-no-files-found: error
           retention-days: 7
