@@ -4,14 +4,14 @@
 #set math.mat(delim: "[")
 
 #plain_box(title: [Problem 9G], subtitle: [TSTST 2014])[
-  Let $P(x)$ and $Q(x)$ be arbitrary polynomials with real coefficients, and let $d$ be the degree of $P(x)$. Assume that $P(x)$ is not the zero polynomial.. Prove that there exist polynomials $A(x)$ and $B(x)$ such that.
+  Let $P(x)$ and $Q(x)$ be arbitrary polynomials with real coefficients, and let $d$ be the degree of $P(x)$. Assume that $P(x)$ is not the zero polynomial. Prove that there exist polynomials $A(x)$ and $B(x)$ such that
 
   #enum(numbering: "(i)")[
     Both $A$ and $B$ have degree at most $d slash 2$,
   ][
     At most one of $A$ and $B$ is the zero polynomial,
   ][
-    $P$ divdes $A + Q dot B$
+    $P$ divides $A + Q dot B$
   ]
 ]
 
