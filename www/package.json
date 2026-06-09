@@ -10,10 +10,10 @@
     "prepare": "../x prepare-fonts"
   },
   "dependencies": {
-    "@myriaddreamin/typst-ts-node-compiler": "0.7.0-rc2",
-    "astro": "^5.16.10",
-    "cheerio": "^1.1.2",
-    "es-toolkit": "^1.44.0"
+    "@myriaddreamin/typst-ts-node-compiler": "0.7.0",
+    "astro": "^5.18.2",
+    "cheerio": "^1.2.0",
+    "es-toolkit": "^1.47.0"
   },
   "packageManager": "pnpm@11.5.2"
 }
