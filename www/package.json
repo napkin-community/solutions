@@ -15,5 +15,5 @@
     "cheerio": "^1.2.0",
     "es-toolkit": "^1.47.0"
   },
-  "packageManager": "pnpm@11.5.2"
+  "packageManager": "pnpm@11.5.3"
 }
