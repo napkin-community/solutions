@@ -12,13 +12,13 @@ jobs:
           persist-credentials: false
 
       # setup typst
-      - uses: typst-community/setup-typst@v4
+      - uses: typst-community/setup-typst@v5
         with:
           typst-version: ^0.14.0
 
       # setup typstyle
       - id: cache-typstyle
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: typstyle
           key: ${{ runner.os }}-typstyle-${{ env.TYPSTYLE_VERSION }}
@@ -31,7 +31,7 @@ jobs:
 
       # setup fonts
       - id: cache-fonts
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: fonts
           key: ${{ runner.os }}-fonts-1

@@ -23,25 +23,27 @@ jobs:
           persist-credentials: false
 
       # setup typst
-      - uses: typst-community/setup-typst@v4
+      - uses: typst-community/setup-typst@v5
         with:
           typst-version: ^0.14.0
 
       # setup fonts
       - id: cache-fonts
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: fonts
           key: ${{ runner.os }}-fonts-1
 
       # setup node & pnpm
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         with:
           run_install: false
-          package_json_file: www/package.json
-      - uses: actions/setup-node@v4
+          # Workaround of https://github.com/pnpm/action-setup/issues/227
+          #package_json_file: www/package.json
+          version: 11.5.3
+      - uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           cache: pnpm
           cache-dependency-path: www/pnpm-lock.yaml
 
@@ -54,8 +56,9 @@ jobs:
           pnpm build
 
       # deploy to GitHub Pages
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: www/dist
+          include-hidden-files: true
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
