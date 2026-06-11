@@ -4,12 +4,17 @@ on:
     paths:
       - "**.typ"
 
+permissions: {}
+
 jobs:
   preview:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: read
+    outputs:
+      file: ${{ steps.find-typ.outputs.file }}
+      skip: ${{ steps.find-typ.outputs.skip }}
     steps:
       - uses: actions/checkout@v6
         with:
@@ -49,30 +54,150 @@ jobs:
       # Compile to PNG
       - if: steps.find-typ.outputs.skip == 'false'
         env:
+          PREVIEW_FILE: ${{ steps.find-typ.outputs.file }}
           TYPST_FONT_PATHS: ./fonts
         run: |
-          file="${{ steps.find-typ.outputs.file }}"
+          file="$PREVIEW_FILE"
           tmp=$(mktemp)
           printf '#set page(height: auto, margin: 10pt)\n' | cat - "$file" > "$tmp"
           mv "$tmp" "$file"
           typst compile "$file" preview.png --ppi 144
 
-      # Make the rendered image available to the privileged publisher workflow.
       - if: steps.find-typ.outputs.skip == 'false'
         env:
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PREVIEW_FILE: ${{ steps.find-typ.outputs.file }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          mkdir -p preview-artifact
-          cp preview.png preview-artifact/preview.png
-          printf '{"pr_number":%s,"head_sha":"%s"}\n' "$PR_NUMBER" "$HEAD_SHA" > preview-artifact/metadata.json
+          {
+            echo "## Typst preview"
+            echo
+            printf 'Rendered `%s`.\n' "$PREVIEW_FILE"
+            echo
+            printf '[Download the `typst-preview` artifact](%s) from this workflow run to view the PNG.\n' "$RUN_URL"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - if: steps.find-typ.outputs.skip == 'false'
         uses: actions/upload-artifact@v7
         with:
           name: typst-preview
-          path: |
-            preview-artifact/preview.png
-            preview-artifact/metadata.json
+          path: preview.png
           if-no-files-found: error
           retention-days: 7
+
+  comment:
+    needs: preview
+    if: >-
+      ${{
+        needs.preview.outputs.skip == 'false' &&
+        github.event.pull_request.head.repo.full_name == github.repository
+      }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: write
+      issues: write
+      pull-requests: read
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: typst-preview
+          path: preview-artifact
+
+      - run: |
+          magic=$(head -c 8 preview-artifact/preview.png | od -An -t x1 | tr -d ' \n')
+          if [ "$magic" != "89504e470d0a1a0a" ]; then
+            echo "preview.png is not a PNG file" >&2
+            exit 1
+          fi
+
+      - uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const prNumber = context.payload.pull_request.number;
+            const headSha = context.payload.pull_request.head.sha;
+            const headRepo = context.payload.pull_request.head.repo.full_name;
+
+            if (headRepo !== `${owner}/${repo}`) {
+              core.info(`Skipping preview comment for forked PR from ${headRepo}.`);
+              return;
+            }
+
+            const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: prNumber });
+
+            if (pr.state !== 'open') {
+              core.info(`PR #${prNumber} is ${pr.state}; skipping preview comment.`);
+              return;
+            }
+            if (pr.head.sha !== headSha) {
+              core.info(`Skipping stale preview for ${headSha}; current PR head is ${pr.head.sha}.`);
+              return;
+            }
+
+            const path = `pr-${prNumber}.png`;
+            const content = fs.readFileSync('preview-artifact/preview.png', { encoding: 'base64' });
+
+            let commitSha;
+            let branchExists = true;
+            try {
+              await github.rest.repos.getBranch({ owner, repo, branch: '_preview' });
+            } catch (error) {
+              if (error.status !== 404) throw error;
+              branchExists = false;
+            }
+
+            if (!branchExists) {
+              const { data: blob } = await github.rest.git.createBlob({ owner, repo, content, encoding: 'base64' });
+              const { data: tree } = await github.rest.git.createTree({
+                owner,
+                repo,
+                tree: [{ path, mode: '100644', type: 'blob', sha: blob.sha }],
+              });
+              const { data: commit } = await github.rest.git.createCommit({
+                owner,
+                repo,
+                message: `Preview for PR #${prNumber}`,
+                tree: tree.sha,
+                parents: [],
+              });
+              await github.rest.git.createRef({ owner, repo, ref: 'refs/heads/_preview', sha: commit.sha });
+              commitSha = commit.sha;
+            } else {
+              let sha;
+              try {
+                const { data } = await github.rest.repos.getContent({ owner, repo, path, ref: '_preview' });
+                sha = data.sha;
+              } catch (error) {
+                if (error.status !== 404) throw error;
+              }
+              const { data: uploaded } = await github.rest.repos.createOrUpdateFileContents({
+                owner,
+                repo,
+                path,
+                message: `Preview for PR #${prNumber}`,
+                content,
+                branch: '_preview',
+                ...(sha ? { sha } : {}),
+              });
+              commitSha = uploaded.commit.sha;
+            }
+
+            const marker = '<!-- typst-preview -->';
+            const imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${commitSha}/${path}`;
+            const body = `${marker}\n![preview](${imageUrl})`;
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number: prNumber,
+              per_page: 100,
+            });
+            const existing = comments.find((comment) => comment.body.startsWith(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number: prNumber, body });
+            }
