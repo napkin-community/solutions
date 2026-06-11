@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@myriaddreamin/typst-ts-node-compiler':
-        specifier: 0.7.0
+        specifier: ^0.7.0
         version: 0.7.0
       astro:
         specifier: ^6.4.5
