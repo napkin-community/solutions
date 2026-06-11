@@ -7,7 +7,9 @@ jobs:
     env:
       TYPSTYLE_VERSION: 0.14.4
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       # setup typst
       - uses: typst-community/setup-typst@v4

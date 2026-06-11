@@ -12,6 +12,8 @@ jobs:
       pull-requests: read
     steps:
       - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       # Find the single changed .typ file
       - id: find-typ
