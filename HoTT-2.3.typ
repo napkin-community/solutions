@@ -30,11 +30,11 @@
 
   $q$ 에 대한 경로 귀납(path induction)을 사용하자. $z$ 를 $y$ 로, $q$ 를 $refl_y$ 로 가정하면 충분하다.
 
-  1. **좌변**: `transport`의 정의에 의해, 경로가 $refl$ 일 때 `transport`
+  1. *좌변*: `transport`의 정의에 의해, 경로가 $refl$ 일 때 `transport`
     함수는 항등 함수(identity function)와 정의상 같다(definitionally equal).
     $ p dot_4 refl_y equiv "transport"^P (refl_y, p) equiv p $
 
-  2. **우변**: 기존 경로 연결의 우측 단위 법칙(right unit law)에 의해 다음이
+  2. *우변*: 기존 경로 연결의 우측 단위 법칙(right unit law)에 의해 다음이
     성립한다.
     $ p dot refl_y = p $
 

@@ -31,7 +31,7 @@
     π^A ∘ f = g \
     π^B ∘ f = h
   $
-  를 만족하는데, 편의상 $f$를 $angle.l g, h angle.r$로 표기하겠다.
+  를 만족하는데, 편의상 $f$를 $chevron.l g, h chevron.r$로 표기하겠다.
 
   그리고 이제 아래의 아름다운 그림을 보라:
 
@@ -73,7 +73,7 @@
       edge(
         <XY_Z>,
         <YZ>,
-        label: text(blue, $angle.l beta compose p, q angle.r$),
+        label: text(blue, $chevron.l beta compose p, q chevron.r$),
         stroke: (paint: blue),
         label-side: right,
       ),
@@ -82,7 +82,7 @@
         <X_YZ>,
         label: text(
           blue,
-          $f := angle.l alpha compose p, angle.l beta compose p, q angle.r angle.r$,
+          $f := chevron.l alpha compose p, chevron.l beta compose p, q chevron.r chevron.r$,
         ),
         stroke: (paint: blue),
         label-pos: 75%,
@@ -94,7 +94,7 @@
       edge(
         <X_YZ>,
         <XY>,
-        label: text(orange, $angle.l u, r compose v angle.r$),
+        label: text(orange, $chevron.l u, r compose v chevron.r$),
         stroke: (paint: orange),
       ),
       edge(
@@ -102,7 +102,7 @@
         <XY_Z>,
         label: text(
           orange,
-          $g := angle.l angle.l u, r compose v angle.r, s compose v angle.r$,
+          $g := chevron.l chevron.l u, r compose v chevron.r, s compose v chevron.r$,
         ),
         stroke: (paint: orange),
         label-pos: 75%,

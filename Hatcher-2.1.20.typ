@@ -25,13 +25,13 @@
 
   More generally, let $U_k X$ be the union of $k$ cones with their bases identified.
 
-  *Theorem.* $forall n, k : tilde(H)_(n)(U_k X) = (tilde(H)_(n-1)(X))^(plus.circle (k-1))$
+  *Theorem.* $forall n, k : tilde(H)_(n)(U_k X) = (tilde(H)_(n-1)(X))^(plus.o (k-1))$
 
   _Proof._
   Since $U_k X slash C X tilde.eq (S X)^(or (k-1))$,
   $
     tilde(H)_(n) (U_k X) & tilde.eq tilde(H)_(n)(U_k X slash C X) & space.quad (because "long exact sequence") \
-    & tilde.eq (tilde(H)_(n)(S X))^(plus.circle (k-1)) \
-    & tilde.eq (tilde(H)_(n-1)(X))^(plus.circle (k-1)) && space.quad qed.
+    & tilde.eq (tilde(H)_(n)(S X))^(plus.o (k-1)) \
+    & tilde.eq (tilde(H)_(n-1)(X))^(plus.o (k-1)) && space.quad qed.
   $
 ]

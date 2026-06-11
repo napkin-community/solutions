@@ -2,7 +2,7 @@
 #import "template/napkin-users.typ": *
 
 #plain_box(title: [Problem 10D])[
-  Suppose $T : CC^(plus.circle 2) -> CC^(plus.circle 2)$ is a linear map of $CC$-vector spaces such that $T^2011 = "id"$.
+  Suppose $T : CC^(plus.o 2) -> CC^(plus.o 2)$ is a linear map of $CC$-vector spaces such that $T^2011 = "id"$.
   Must $T$ be diagonalizable?
 ]
 

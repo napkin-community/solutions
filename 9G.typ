@@ -28,7 +28,7 @@
 
   At most $k$-degree polynomial vector space is isomorphic to $RR^(k+1)$.
 
-  Consider $V = RR^(plus.circle (floor(d slash 2))+1) times RR^(plus.circle (floor(d slash 2)+1))$, $W = RR^(plus.circle d)$, and a linear map
+  Consider $V = RR^(plus.o (floor(d slash 2))+1) times RR^(plus.o (floor(d slash 2)+1))$, $W = RR^(plus.o d)$, and a linear map
 
   $T = (A, B) |-> (A + Q dot B) mod P : V -> W$
 
@@ -41,7 +41,7 @@
 
   In other words, $dim ker T = 2 (floor(d slash 2) + 1) - dim im T$.
 
-  In this case, $im T subset.eq RR^(plus.circle d)$ so $dim im T <= d$.  For evaluating $dim ker T$, choose the maximal value $d$.
+  In this case, $im T subset.eq RR^(plus.o d)$ so $dim im T <= d$.  For evaluating $dim ker T$, choose the maximal value $d$.
 
   Let's case work to evaluate $dim ker T$,
 

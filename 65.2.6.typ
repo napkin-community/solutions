@@ -12,9 +12,9 @@
   Define a path homotopy $f_s (t): [0, 1] times [0, 1] -> X$ as:
   $
     f_s (t) = cases(
-                              alpha(2t) & space.quad &           (0 <= t <= 1 / 2 s) \
-      alpha(s) = overline(alpha)(1 - s) &            & (1 / 2 s <= t <= 1 - 1 / 2 s) \
-                overline(alpha)(2t - 1) &            &       (1 - 1 / 2 s <= t <= 1)
+      alpha(2t) & space.quad & (0 <= t <= 1 / 2 s),
+      alpha(s) = overline(alpha)(1 - s) && (1 / 2 s <= t <= 1 - 1 / 2 s),
+      overline(alpha)(2t - 1) && (1 - 1 / 2 s <= t <= 1)
     )
   $
 
