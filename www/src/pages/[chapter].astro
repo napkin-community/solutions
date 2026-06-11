@@ -10,7 +10,9 @@ import Typst from '../components/Typst.astro';
 
 export const getStaticPaths = (async () => {
   const chapters = await getChapters();
-  return chapters.map((chapter) => ({ params: { chapter: chapter.id } }));
+  return chapters.map((chapter) => ({
+    params: { chapter: chapter.id.toString() },
+  }));
 }) satisfies GetStaticPaths;
 
 const { chapter } = Astro.params;

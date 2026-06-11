@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@myriaddreamin/typst-ts-node-compiler": "0.7.0",
-    "astro": "^5.18.2",
+    "astro": "^6.4.5",
     "cheerio": "^1.2.0",
     "es-toolkit": "^1.47.0"
   },
