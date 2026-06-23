@@ -13,12 +13,12 @@
     "@myriaddreamin/typst-ts-node-compiler": "^0.7.0",
     "astro": "^7.0.0",
     "cheerio": "^1.2.0",
-    "es-toolkit": "^1.47.0"
+    "es-toolkit": "^1.48.1"
   },
   "packageManager": "pnpm@11.8.0",
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
-    "@types/node": "^25.9.2",
+    "@types/node": "^25.9.4",
     "typescript": "^6.0.3"
   }
 }
